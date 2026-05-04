@@ -1,333 +1,1093 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AYDA · Sınıf Giriş & Ders Tekrarları</title>
-<meta name="color-scheme" content="light">
-<meta name="theme-color" content="#234078">
-<style>
-  :root{
-    --ayda:#234078;--bg:#f7f9fc;--ink:#1d2433;--muted:#5b667a;
-    --card:#fff;--border:rgba(35,64,120,.12);
-    --radius:18px;--shadow:0 12px 30px rgba(0,0,0,.06);
-    --ring:rgba(35,64,120,.18)
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
-    font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial}
-  html{scroll-behavior:smooth}
-  .wrap{min-height:100dvh;display:grid;place-items:center;padding:24px}
-  .card{width:100%;max-width:720px;background:var(--card);
-    border:1px solid var(--border);box-shadow:var(--shadow);
-    border-radius:var(--radius);padding:28px}
-  h1{margin:0 0 8px;font-size:clamp(20px,2.6vw,28px)}
-  .sub{margin:0 0 18px;color:var(--muted)}
-  label{display:block;margin:12px 0 6px;font-weight:600}
-  .row{display:flex;gap:10px}
-  input[type=text]{flex:1;border:1px solid var(--border);
-    border-radius:12px;padding:14px 16px;font-size:16px;outline:none}
-  input[type=text]:focus{border-color:var(--ayda);
-    box-shadow:0 0 0 6px var(--ring)}
-  button{background:var(--ayda);color:#fff;border:0;
-    border-radius:12px;padding:14px 18px;font-weight:700;cursor:pointer}
-  button:active{transform:translateY(1px)}
-  .hint{margin-top:8px;color:var(--muted);font-size:14px}
-  .err{margin-top:10px;color:#b00020;font-weight:600}
-  header{display:flex;gap:12px;align-items:center;padding:14px 18px;
-    background:#fff;border-bottom:1px solid var(--border)}
-  a.back{color:#fff;background:var(--ayda);padding:8px 12px;
-    border-radius:10px;text-decoration:none;font-weight:700}
-  .section{max-width:1100px;margin:24px auto;padding:0 16px}
-  iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:12px}
-  .btn{display:inline-block;background:var(--ayda);color:#fff;
-    text-decoration:none;padding:12px 16px;border-radius:12px;font-weight:700}
-  .rowwrap{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-  .logo{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-  .logo-badge{width:36px;height:36px;border-radius:10px;background:var(--ayda)}
-  #jumpBtn{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
-    background:var(--ayda);color:#fff;border:0;border-radius:999px;
-    padding:12px 16px;box-shadow:var(--shadow);
-    display:flex;align-items:center;gap:10px;font-weight:800;z-index:60}
-  #jumpBtn[hidden]{display:none}
-  .chev{font-size:18px;line-height:1;animation:bob 1.2s infinite}
-  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
-</style>
-</head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AYDA · Online Kütüphane</title>
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#234078" />
 
-<body>
-
-<main id="login" class="wrap">
-  <section class="card">
-    <div class="logo">
-      <div class="logo-badge"></div>
-      <strong>AYDA Online Eğitim</strong>
-    </div>
-
-    <h1>Lütfen sınıf kodunu giriniz</h1>
-    <p class="sub">Size verilen sınıf kodunu yazınız</p>
-
-    <label for="code">Sınıf kodu</label>
-    <div class="row">
-      <input id="code" type="text" autocomplete="off">
-      <button id="go">Giriş</button>
-    </div>
-
-    <div class="hint">Örnek: A1Aralik25241225</div>
-    <div id="err" class="err" hidden>Geçersiz kod.</div>
-  </section>
-</main>
-
-<section id="class" hidden>
-  <header>
-    <a class="back" href="#" id="change">← Kodu Değiştir</a>
-    <strong id="head">AYDA · Sınıf</strong>
-  </header>
-
-  <main class="section">
-    <h1 id="titleClass">Ders Tekrarları</h1>
-    <p class="sub" id="desc"></p>
-
-    <section class="card">
-      <iframe id="yt"
-        allow="accelerometer; autoplay; clipboard-write;
-               encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen></iframe>
-
-      <div class="rowwrap">
-        <a class="btn" id="allBtn" target="_blank">Tüm derslere git (YouTube)</a>
-        <a class="btn" href="https://onurqlp.github.io/bibliothek/"
-           target="_blank">Online Kütüphane (AYDA)</a>
-      </div>
-
-      <p class="hint">
-        Video açılmazsa YouTube butonunu kullanabilirsiniz.
-      </p>
-    </section>
-  </main>
-</section>
-
-<button id="jumpBtn" hidden><span class="chev">↓</span> Derse git</button>
-
-<script>
-  const AYDA_PASSWORD_URL = "https://onurqlp.github.io/ayda-pass/passwords.json";
-
-  const trFold = s => s.toLocaleLowerCase('tr-TR')
-    .replace(/ı/g,'i').replace(/ö/g,'o').replace(/ü/g,'u')
-    .replace(/ş/g,'s').replace(/ç/g,'c').replace(/ğ/g,'g');
-
-  const classes = {
-    'a1kasim25141125': {
-      name: 'A1 Kasım 2025',
-      playlistId: 'PLQwhOGFlptnKQo0oP6i7l8gXD8trcTjuo',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnKQo0oP6i7l8gXD8trcTjuo'
-    },
-    'a2kasim25171125': {
-      name: 'A2 Kasım 2025',
-      playlistId: 'PLQwhOGFlptnK2FkNjTa1ziOangyy_i50f',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnK2FkNjTa1ziOangyy_i50f'
-    },
-
-    /* ✅ YENİ SINIF */
-    '241225': {
-      name: 'A1 Aralık 2025',
-      playlistId: 'PLQwhOGFlptnLdkvcoYRt9N6Qbret9aikN',
-      playlistUrl: 'https://youtube.com/playlist?list=PLQwhOGFlptnLdkvcoYRt9N6Qbret9aikN'
-    },
-    
-    /* ✅ YENİ SINIF */
-    '230126': {
-      name: 'Ocak A1–A2 CNC',
-      playlistId: 'PLQwhOGFlptnKEr24HrDmHIiakCuXX6ymU',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnKEr24HrDmHIiakCuXX6ymU'
-    },
-    /* ✅ YENİ SINIF */
-    '030626': {
-      name: 'A2 Mart 2026',
-      playlistId: 'PLQwhOGFlptnKf8RxzHLd3n1Bm9QJsJRcj',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnKf8RxzHLd3n1Bm9QJsJRcj'
-    },
-        /* ✅ YENİ SINIF */
-    '300126': {
-      name: 'A1 Ocak 2026 · Zeynep Hoca',
-      playlistId: 'PLQwhOGFlptnIdzy8kvYwGQ05LV1iQxoMO',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnIdzy8kvYwGQ05LV1iQxoMO'
-    },
-
-    /* ✅ YENİ SINIF */
-    '290126': {
-      name: 'B1 Ocak 2026 · Onur Hoca',
-      playlistId: 'PLQwhOGFlptnI-jyaH6KDjK4J2ye5-MhXh',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnI-jyaH6KDjK4J2ye5-MhXh'
-    },
-       /* ✅ YENİ SINIF */
-    '010326': {
-      name: 'B2 Mart 2026 · Zeynep Hoca',
-      playlistId: 'PLQwhOGFlptnLieyVPjWf_jjom7wk8sM7S',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnLieyVPjWf_jjom7wk8sM7S'
-    },
-    /* ✅ YENİ SINIF */
-'240226': {
-  name: 'A1 Şubat 2026 · Sibel Hoca',
-  playlistId: 'PLQwhOGFlptnJ-vSNRbICk8ucc8Cw00N2O',
-  playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnJ-vSNRbICk8ucc8Cw00N2O'
-},
-    /* ✅ YENİ SINIF */
-'160326': {
-  name: 'A2 Sınav Hazırlık SABAH 2026 · Süha Hoca',
-  playlistId: 'PLQwhOGFlptnKAiy8xdexwUno0ZmfTpzLS',
-  playlistUrl: 'https://youtube.com/playlist?list=PLQwhOGFlptnKAiy8xdexwUno0ZmfTpzLS'
-},
-    /* ✅ YENİ SINIF */
-'170326': {
-  name: 'A1 A2 2026 · Süha Hoca',
-  playlistId: 'PLQwhOGFlptnLqktYlzyITRj4pjpwRwNng',
-  playlistUrl: 'https://youtube.com/playlist?list=PLQwhOGFlptnLqktYlzyITRj4pjpwRwNng'
-},  
-    /* ✅ YENİ SINIF */
-'200426': {
-  name: 'B1 NİSAN 2026 Gizem Hoca ',
-  playlistId: 'PLQwhOGFlptnK4yQXNcwY6YZ-pZpP0K30H',
-  playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnK4yQXNcwY6YZ-pZpP0K30H'
-},
-    /* ✅ YENİ SINIF */
-'180326': {
-  name: 'A2 Sınav Hazırlık AKŞAM 2026 · Süha Hoca',
-  playlistId: 'PLQwhOGFlptnI1tDHrN208iFU20Ckz4MXW',
-  playlistUrl: 'https://youtube.com/playlist?list=PLQwhOGFlptnI1tDHrN208iFU20Ckz4MXW'
-}, 
-      /* ✅ YENİ SINIF */
-'250426': {
-  name: 'A2 A2 Nisan (Ocak Devamı) Zeynep Hoca',
-  playlistId: 'PLQwhOGFlptnKPF-3In-7mXxi7r2UlHF74',
-  playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnKPF-3In-7mXxi7r2UlHF74'
-},
-    /* ✅ YENİ SINIF */
-'080426': {
-  name: 'A1 NİSAN 2026 · Furkan Hoca',
-  playlistId: 'PLQwhOGFlptnKyFdgy7E1Sh1VNGu_nwOle',
-  playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnKyFdgy7E1Sh1VNGu_nwOle'
-},
-
-    /* ✅ YENİ SINIF */
-    '010226': {
-      name: 'A2 Ocak 2026 · Gizem Hoca',
-      playlistId: 'PLQwhOGFlptnLOwSCE8IpBt_2ey5_86wu5',
-      playlistUrl: 'https://www.youtube.com/playlist?list=PLQwhOGFlptnLOwSCE8IpBt_2ey5_86wu5'
+  <style>
+    :root{
+      --ayda:#234078;
+      --ayda-2:#315992;
+      --ayda-dark:#172b52;
+      --gold:#c9a24d;
+      --bg:#f4f7ff;
+      --card:#ffffff;
+      --ink:#111827;
+      --muted:#6b7280;
+      --soft:#eef3ff;
+      --border:rgba(35,64,120,.12);
+      --danger:#b91c1c;
+      --success:#15803d;
+      --shadow:0 22px 60px rgba(15,23,42,.10);
+      --shadow-soft:0 10px 28px rgba(15,23,42,.07);
+      --r:22px;
+      --full:999px;
     }
-  };
 
-  const $ = id => document.getElementById(id);
-  const login = $('login'), klass = $('class');
-  const codeInput = $('code'), err = $('err');
-  const head = $('head'), yt = $('yt'), allBtn = $('allBtn');
-  const desc = $('desc'), jumpBtn = $('jumpBtn');
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left,rgba(35,64,120,.20),transparent 31%),
+        radial-gradient(circle at top right,rgba(201,162,77,.16),transparent 28%),
+        linear-gradient(135deg,#f8fbff 0%,#eef3ff 48%,#e5edff 100%);
+    }
 
-  function scrollToClass(){
-    klass.scrollIntoView({behavior:'smooth'});
-  }
+    button,input,a{font:inherit}
+    button{cursor:pointer}
 
-  function renderClass(key){
-    const c = classes[key];
-    if(!c){ err.hidden = false; return; }
+    .page{
+      width:min(1220px,100%);
+      margin:0 auto;
+      padding:18px;
+    }
 
-    head.textContent = `AYDA · ${c.name}`;
-    desc.textContent = `${c.name} için ders tekrarları`;
-    yt.src = `https://www.youtube.com/embed/videoseries?list=${c.playlistId}`;
-    allBtn.href = c.playlistUrl;
+    .shell{
+      background:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.75);
+      box-shadow:var(--shadow);
+      border-radius:30px;
+      overflow:hidden;
+      backdrop-filter:blur(18px);
+    }
 
-    login.hidden = true;
-    klass.hidden = false;
-    jumpBtn.hidden = false;
-    scrollToClass();
-  }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:18px 20px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(238,243,255,.84));
+    }
 
-  function findPasswordGroup(passwordGroups, enteredCode) {
-    const normalizedEntered = trFold(enteredCode.trim());
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
 
-    return passwordGroups.find(group => {
-      if (group.active !== true) return false;
-      if (!Array.isArray(group.codes)) return false;
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.02em;
+      background:linear-gradient(135deg,var(--ayda),#3d6ab2);
+      box-shadow:0 12px 24px rgba(35,64,120,.34);
+      flex:0 0 auto;
+    }
 
-      return group.codes.some(code => trFold(String(code).trim()) === normalizedEntered);
-    });
-  }
+    .brand h1{
+      margin:0;
+      font-size:18px;
+      line-height:1.15;
+      letter-spacing:-.02em;
+    }
 
-  async function checkCentralPassword(key) {
-    try {
-      const response = await fetch(AYDA_PASSWORD_URL + "?v=" + Date.now());
-      const passwordGroups = await response.json();
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.3;
+    }
 
-      const group = findPasswordGroup(passwordGroups, key);
+    .status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:var(--full);
+      color:var(--ayda);
+      background:rgba(35,64,120,.08);
+      border:1px solid rgba(35,64,120,.10);
+      font-size:12px;
+      font-weight:650;
+      white-space:nowrap;
+    }
 
-      if (!group) {
-        err.textContent = "Kod hatalı veya pasif durumda.";
-        err.hidden = false;
-        return false;
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#94a3b8;
+      box-shadow:0 0 0 4px rgba(148,163,184,.20);
+      flex:0 0 auto;
+    }
+    .dot.ok{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.18)}
+    .dot.warn{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.18)}
+    .dot.bad{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.18)}
+
+    .gate{
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);
+      gap:18px;
+      padding:20px;
+    }
+
+    .hero-card,.preview-card,.panel{
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--border);
+      border-radius:var(--r);
+      box-shadow:var(--shadow-soft);
+    }
+
+    .hero-card{padding:24px}
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:6px 10px;
+      border-radius:var(--full);
+      background:rgba(35,64,120,.08);
+      color:var(--ayda);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .hero-card h2{
+      margin:14px 0 8px;
+      font-size:clamp(25px,4vw,42px);
+      line-height:1.04;
+      letter-spacing:-.045em;
+      color:#0f172a;
+    }
+
+    .hero-card .lead{
+      margin:0;
+      max-width:650px;
+      color:#4b5563;
+      font-size:15px;
+      line-height:1.6;
+    }
+
+    .login-box{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:10px;
+      align-items:end;
+    }
+
+    .field label{
+      display:block;
+      margin:0 0 6px;
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .input-wrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(35,64,120,.18);
+      border-radius:18px;
+      background:#fff;
+      padding:0 12px;
+      transition:.16s ease;
+    }
+
+    .input-wrap:focus-within{
+      border-color:rgba(35,64,120,.60);
+      box-shadow:0 0 0 5px rgba(35,64,120,.10);
+    }
+
+    .input-wrap input{
+      width:100%;
+      border:0;
+      outline:0;
+      padding:13px 0;
+      background:transparent;
+      font-size:15px;
+    }
+
+    .eye-btn{
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      padding:4px;
+      border-radius:10px;
+    }
+
+    .primary-btn,.soft-btn,.ghost-btn{
+      border:0;
+      border-radius:18px;
+      padding:13px 17px;
+      font-weight:800;
+      font-size:14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      transition:.15s ease;
+      white-space:nowrap;
+      text-decoration:none;
+    }
+
+    .primary-btn{
+      color:#fff;
+      background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
+      box-shadow:0 14px 28px rgba(35,64,120,.32);
+    }
+    .primary-btn:hover{transform:translateY(-1px);box-shadow:0 18px 36px rgba(35,64,120,.40)}
+    .primary-btn:disabled{opacity:.58;cursor:not-allowed;transform:none;box-shadow:none}
+
+    .soft-btn{
+      color:var(--ayda);
+      background:rgba(35,64,120,.08);
+      border:1px solid rgba(35,64,120,.12);
+    }
+    .ghost-btn{
+      color:#334155;
+      background:#fff;
+      border:1px solid rgba(148,163,184,.45);
+    }
+
+    .message{
+      display:none;
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:16px;
+      font-size:12px;
+      line-height:1.45;
+      border:1px solid transparent;
+    }
+    .message.show{display:block}
+    .message.error{color:var(--danger);background:#fff1f2;border-color:rgba(185,28,28,.14)}
+    .message.info{color:var(--ayda);background:rgba(35,64,120,.07);border-color:rgba(35,64,120,.12)}
+
+    .quick-info{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-top:18px;
+    }
+
+    .mini-stat{
+      border:1px solid rgba(35,64,120,.10);
+      background:linear-gradient(135deg,#fff,rgba(238,243,255,.72));
+      border-radius:18px;
+      padding:12px;
+    }
+    .mini-stat strong{display:block;font-size:17px;color:var(--ayda)}
+    .mini-stat span{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.25}
+
+    .preview-card{
+      padding:18px;
+      background:
+        radial-gradient(circle at top right,rgba(201,162,77,.20),transparent 42%),
+        linear-gradient(135deg,var(--ayda-dark),var(--ayda));
+      color:#fff;
+      min-height:100%;
+    }
+
+    .preview-card h3{margin:0;font-size:16px}
+    .preview-card p{margin:8px 0 0;color:#dbeafe;font-size:13px;line-height:1.55}
+    .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+    .preview-item{
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.16);
+      min-height:82px;
+    }
+    .preview-item b{display:block;font-size:13px;margin-top:7px}
+    .preview-item span{display:block;color:#dbeafe;font-size:11px;margin-top:3px;line-height:1.35}
+
+    .library{display:none;padding:20px;border-top:1px solid var(--border)}
+    .library.open{display:block;animation:fade .18s ease-out both}
+
+    .workspace{
+      display:grid;
+      grid-template-columns:300px minmax(0,1fr);
+      gap:16px;
+    }
+
+    .panel{padding:16px}
+    .panel-title{
+      color:var(--muted);
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      margin-bottom:10px;
+    }
+
+    .class-banner{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      padding:13px;
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(35,64,120,.10),rgba(35,64,120,.04));
+      border:1px solid rgba(35,64,120,.12);
+      margin-bottom:12px;
+    }
+    .class-banner strong{font-size:14px;color:var(--ayda)}
+    .class-banner span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+
+    .logout-btn{
+      border:0;
+      background:#fff;
+      color:#64748b;
+      border-radius:12px;
+      padding:7px 9px;
+      font-size:12px;
+      font-weight:750;
+    }
+
+    .group{margin-top:14px}
+    .group-label{
+      margin:0 0 8px;
+      font-size:11px;
+      color:#64748b;
+      font-weight:900;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
+
+    .btn-grid{display:flex;flex-wrap:wrap;gap:8px}
+    .tab,.chip,.resource-chip{
+      border:1px solid rgba(148,163,184,.45);
+      background:#fff;
+      color:#172033;
+      border-radius:var(--full);
+      padding:8px 11px;
+      font-size:12px;
+      font-weight:750;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      transition:.14s ease;
+    }
+    .tab.active,.chip.active,.resource-chip.active{
+      background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 10px 22px rgba(35,64,120,.28);
+      transform:translateY(-1px);
+    }
+    .tab:hover:not(.active),.chip:hover:not(.active),.resource-chip:hover:not(.active),.ghost-btn:hover{background:#f8fafc}
+
+    details.filter-box{
+      margin-top:12px;
+      border:1px dashed rgba(35,64,120,.24);
+      border-radius:18px;
+      padding:10px;
+      background:rgba(238,243,255,.50);
+    }
+    details.filter-box summary{
+      cursor:pointer;
+      color:var(--ayda);
+      font-size:12px;
+      font-weight:900;
+      list-style:none;
+    }
+    details.filter-box summary::-webkit-details-marker{display:none}
+
+    .filter-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+    .viewer-head{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+      margin-bottom:12px;
+    }
+    .viewer-head h2{margin:0;font-size:18px;letter-spacing:-.02em}
+    .viewer-head p{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+
+    .tools{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin:0 0 10px;
+    }
+    .search{
+      flex:1 1 280px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(148,163,184,.45);
+      border-radius:18px;
+      padding:0 12px;
+      background:#fff;
+    }
+    .search input{width:100%;border:0;outline:0;background:transparent;padding:11px 0;font-size:13px}
+
+    .resource-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:10px 0 12px;
+      max-height:128px;
+      overflow:auto;
+      padding-right:4px;
+    }
+
+    .frame-wrap{
+      position:relative;
+      min-height:430px;
+      border-radius:20px;
+      overflow:hidden;
+      border:1px solid rgba(148,163,184,.42);
+      background:
+        repeating-linear-gradient(45deg,rgba(148,163,184,.10),rgba(148,163,184,.10) 10px,rgba(226,232,240,.56) 10px,rgba(226,232,240,.56) 20px);
+    }
+    iframe{width:100%;height:430px;border:0;background:#fff;display:block}
+    .empty{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      text-align:center;
+    }
+    .empty.show{display:flex}
+    .empty-card{
+      max-width:430px;
+      border-radius:22px;
+      padding:18px;
+      background:rgba(15,23,42,.90);
+      color:#e5e7eb;
+      box-shadow:0 24px 60px rgba(15,23,42,.28);
+    }
+    .empty-card b{color:#fff}
+    .empty-card p{margin:6px 0 0;color:#cbd5e1;font-size:12px;line-height:1.45}
+
+    .direct-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-top:9px;
+      color:var(--muted);
+      font-size:11px;
+      flex-wrap:wrap;
+    }
+
+    .direct-row a{
+      color:var(--ayda);
+      text-decoration:none;
+      font-weight:850;
+      background:rgba(35,64,120,.07);
+      border:1px solid rgba(35,64,120,.12);
+      border-radius:var(--full);
+      padding:7px 10px;
+    }
+
+    .fab{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      z-index:20;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:flex-end;
+    }
+    .fab-menu{
+      display:none;
+      background:#fff;
+      border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);
+      border-radius:18px;
+      padding:8px;
+    }
+    .fab-menu.open{display:block}
+    .fab-menu a{display:block;text-decoration:none;color:#172033;padding:9px 12px;border-radius:12px;font-size:13px;font-weight:750}
+    .fab-menu a:hover{background:#f8fafc}
+    .fab-button{border:0;color:#fff;background:linear-gradient(135deg,var(--ayda),var(--ayda-2));border-radius:20px;padding:12px 14px;font-weight:850;box-shadow:0 14px 32px rgba(35,64,120,.32)}
+
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    @media(max-width:920px){
+      .gate,.workspace{grid-template-columns:1fr}
+      .preview-grid,.quick-info{grid-template-columns:1fr}
+      .topbar{align-items:flex-start;flex-direction:column}
+      .status-pill{white-space:normal}
+    }
+    @media(max-width:560px){
+      .page{padding:10px}
+      .shell{border-radius:22px}
+      .topbar,.gate,.library{padding:14px}
+      .hero-card{padding:18px}
+      .login-box{grid-template-columns:1fr}
+      .primary-btn{width:100%}
+      .frame-wrap,iframe{height:auto;min-height:370px}
+      iframe{height:370px}
+      .fab{left:12px;right:12px;align-items:stretch}
+      .fab-button{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">A</div>
+          <div>
+            <h1>AYDA · Online Kütüphane</h1>
+            <p>Almanca ders materyalleri, tekrar videoları ve sınav hazırlık kaynakları</p>
+          </div>
+        </div>
+        <div class="status-pill" id="passwordStatus"><span class="dot warn" id="statusDot"></span><span id="statusText">Şifre sistemi yükleniyor...</span></div>
+      </header>
+
+      <section class="gate" id="gateSection">
+        <div class="hero-card">
+          <div class="eyebrow">🔐 Merkezi şifre sistemi</div>
+          <h2>Sınıf kodunu gir, kaynaklara tek ekrandan ulaş.</h2>
+          <p class="lead">Bu sayfa artık şifreleri kodun içinden değil, <strong>ayda-pass</strong> deposundaki merkezi şifre dosyasından alır. Böylece yeni sınıf kodu eklemek için bu HTML dosyasını yeniden düzenlemen gerekmez.</p>
+
+          <form class="login-box" onsubmit="event.preventDefault(); unlockLibrary();">
+            <div class="field">
+              <label for="classCodeInput">Sınıf kodu</label>
+              <div class="input-wrap">
+                <span>🔑</span>
+                <input id="classCodeInput" type="password" placeholder="Sınıf kodunu yaz" autocomplete="off" />
+                <button class="eye-btn" type="button" onclick="togglePassword()" aria-label="Şifreyi göster/gizle">👁️</button>
+              </div>
+            </div>
+            <button id="loginBtn" class="primary-btn" type="submit" disabled>Giriş yap</button>
+          </form>
+
+          <div id="messageBox" class="message info show">Şifre listesi yükleniyor. İnternet bağlantısı veya GitHub Pages erişimi yoksa giriş geçici olarak yapılamaz.</div>
+
+          <div class="quick-info">
+            <div class="mini-stat"><strong>A1–B2</strong><span>Seviyeye göre ayrılmış materyaller</span></div>
+            <div class="mini-stat"><strong>TELC</strong><span>Sınav hazırlık klasörleri ve alıştırmalar</span></div>
+            <div class="mini-stat"><strong>Tek panel</strong><span>Drive, YouTube, Quizlet ve online linkler</span></div>
+          </div>
+        </div>
+
+        <aside class="preview-card">
+          <h3>Kullanım mantığı</h3>
+          <p>Öğrenci sınıf kodunu girer. Kod doğruysa seviyeyi seçer, kategori filtresi veya arama ile ihtiyacı olan kaynağı açar.</p>
+          <div class="preview-grid">
+            <div class="preview-item">📚<b>Ders materyali</b><span>Kitap, PDF, Drive klasörleri</span></div>
+            <div class="preview-item">▶️<b>Ders tekrarları</b><span>Video kayıtları ve YouTube listeleri</span></div>
+            <div class="preview-item">🎯<b>Sınav hazırlık</b><span>A1, A2, B1, B2 sınav kaynakları</span></div>
+            <div class="preview-item">🌐<b>Online alıştırma</b><span>Quizlet, Hueber, DW ve ek çalışmalar</span></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="library" id="librarySection">
+        <div class="workspace">
+          <aside class="panel">
+            <div class="class-banner">
+              <div>
+                <strong id="activeCodeLabel">Kütüphane açık</strong>
+                <span>Merkezi şifre sistemi ile giriş yapıldı.</span>
+              </div>
+              <button class="logout-btn" onclick="logout()">Çıkış</button>
+            </div>
+
+            <div class="panel-title">Seviye seç</div>
+            <div class="btn-grid" id="levelButtons">
+              <button class="tab active" data-level="A1" onclick="selectLevel(event)">A1</button>
+              <button class="tab" data-level="A2" onclick="selectLevel(event)">A2</button>
+              <button class="tab" data-level="B1" onclick="selectLevel(event)">B1</button>
+              <button class="tab" data-level="B2" onclick="selectLevel(event)">B2</button>
+              <button class="tab" data-level="SINAV" onclick="selectLevel(event)">🎯 Sınav</button>
+            </div>
+
+            <div class="group">
+              <p class="group-label">Görünüm</p>
+              <div class="btn-grid">
+                <button class="tab active" data-mode="kategori" onclick="selectView(event)">🎛️ Kategori</button>
+                <button class="tab" data-mode="liste" onclick="selectView(event)">📋 Tam liste</button>
+              </div>
+            </div>
+
+            <details class="filter-box" id="filterDetails">
+              <summary>🔎 Kategorileri aç / kapat</summary>
+              <div class="group">
+                <div class="btn-grid" id="tagButtons">
+                  <button class="chip" data-tag="ders" onclick="toggleTag(event)">📚 Ders</button>
+                  <button class="chip" data-tag="video" onclick="toggleTag(event)">▶️ Video</button>
+                  <button class="chip" data-tag="ek" onclick="toggleTag(event)">🧩 Ek</button>
+                  <button class="chip" data-tag="konu" onclick="toggleTag(event)">📌 Konu</button>
+                  <button class="chip" data-tag="okuma" onclick="toggleTag(event)">📖 Okuma</button>
+                  <button class="chip" data-tag="quizlet" onclick="toggleTag(event)">🔤 Quizlet</button>
+                  <button class="chip" data-tag="online" onclick="toggleTag(event)">🌐 Online</button>
+                  <button class="chip" data-tag="dinleme" onclick="toggleTag(event)">🎧 Dinleme</button>
+                  <button class="chip" data-tag="muzik" onclick="toggleTag(event)">🎵 Müzik</button>
+                  <button class="chip" data-tag="nicos" onclick="toggleTag(event)">🎬 Nicos Weg</button>
+                  <button class="chip" data-tag="dergi" onclick="toggleTag(event)">📰 Dergi</button>
+                  <button class="chip" data-tag="kitap" onclick="toggleTag(event)">📘 Kitap</button>
+                  <button class="chip" data-tag="genel" onclick="toggleTag(event)">ℹ️ Genel</button>
+                  <button class="chip" data-tag="sinav" onclick="toggleTag(event)">🎯 Sınav</button>
+                </div>
+                <div class="filter-actions">
+                  <button class="soft-btn" type="button" onclick="applyFilters()">Uygula</button>
+                  <button class="ghost-btn" type="button" onclick="clearFilters()">Temizle</button>
+                </div>
+              </div>
+            </details>
+          </aside>
+
+          <section class="panel">
+            <div class="viewer-head">
+              <div>
+                <h2 id="viewerTitle">A1 · Kategori</h2>
+                <p id="viewerMeta">Kaynaklar hazırlanıyor.</p>
+              </div>
+              <a class="soft-btn" id="directLinkTop" href="#" target="_blank" rel="noopener" style="visibility:hidden">Yeni sekmede aç</a>
+            </div>
+
+            <div class="tools">
+              <div class="search"><span>🔍</span><input id="searchInput" type="search" placeholder="Kaynak ara: Quizlet, Nicos Weg, okuma, sınav..." /></div>
+            </div>
+
+            <div class="resource-list" id="resourceList"></div>
+
+            <div class="frame-wrap">
+              <iframe id="libraryFrame" src="about:blank" loading="lazy"></iframe>
+              <div class="empty" id="emptyState">
+                <div class="empty-card">
+                  <b>Bu filtreye uygun kaynak bulunamadı.</b>
+                  <p>Kategorileri temizleyebilir, arama kelimesini değiştirebilir veya farklı bir seviye seçebilirsin.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="direct-row">
+              <span>Drive / Quizlet gibi bazı siteler iframe içinde açılmayabilir.</span>
+              <a id="directLinkBottom" href="#" target="_blank" rel="noopener" style="visibility:hidden">🔗 Açılmazsa yeni sekmede aç</a>
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="fab" id="helpFab">
+    <div class="fab-menu" id="fabMenu">
+      <a id="waLink" href="#" target="_blank" rel="noopener">WhatsApp ile ilet</a>
+      <a id="smsLink" href="#">SMS ile ilet</a>
+    </div>
+    <button class="fab-button" type="button" onclick="toggleFab()">📩 Aradığım kaynağı bulamadım</button>
+  </div>
+
+  <script>
+    /* =========================================================
+      AYDA MERKEZİ ŞİFRE SİSTEMİ
+      Şifreler buradan çekilir:
+      https://onurqlp.github.io/ayda-pass/passwords.json
+
+      Desteklenen passwords.json formatları:
+      1) ["ayda1", "240226"]
+      2) { "passwords": ["ayda1", "240226"] }
+      3) { "codes": ["ayda1", "240226"] }
+      4) { "validCodes": ["ayda1", "240226"] }
+      5) { "active": ["ayda1"], "temporary": ["240226"] }
+      6) { "classes": { "A1": ["240226"], "A2": ["030626"] } }
+
+      access-control.js fallback olarak okunur ve içinden tırnaklı kodlar ayıklanır.
+    ========================================================= */
+
+    const PASSWORD_ENDPOINTS = [
+      "https://onurqlp.github.io/ayda-pass/passwords.json",
+      "https://onurqlp.github.io/ayda-pass/access-control.js"
+    ];
+
+    const EMERGENCY_LOCAL_CODES = [];
+
+    let VALID_CODES = new Set();
+    let passwordSourceLoaded = false;
+
+    const LEVEL_LABELS = { A1:"A1", A2:"A2", B1:"B1", B2:"B2", SINAV:"Sınav hazırlık" };
+
+    const CONTENT = {
+      A1:[
+        {label:"A1 Ders Materyalleri",url:"https://drive.google.com/embeddedfolderview?id=1EhcIIju4RZyB5HfcccAF6q8nHIou2uwT#grid",tags:["ders"]},
+        {label:"A1 Menschen Ders Videoları",url:"https://drive.google.com/embeddedfolderview?id=1mv_Crm7n8s1javra-rW4a7fGz6PkFjQZ#grid",tags:["video"]},
+        {label:"A1 Ek Materyal",url:"https://drive.google.com/embeddedfolderview?id=1vxr47d-wdfN6bBQfUJwKXvmv4luPiasq#grid",tags:["ek"]},
+        {label:"A1 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1YolSViv4puykU6wfwTrQ2eswN9MhbCq8#grid",tags:["sinav","ek"]},
+        {label:"Ders Kayıtlarını Nasıl İzlerim?",url:"https://www.youtube.com/embed/cw9jcwIXv6g",tags:["genel","video"]},
+        {label:"Arbeitsbuch Dinlemeleri Nasıl İndiririm?",url:"https://www.youtube.com/embed/SgLBimupSIU",tags:["dinleme","video"]},
+        {label:"A1 Cümle Kalıpları",url:"https://drive.google.com/embeddedfolderview?id=1VAz1AtWp4RDmmRddSZwqQr5XtfszjkOS#grid",tags:["ek","konu"]},
+        {label:"YouTube Almanca Müzikler Playlist",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZGaC8tkVghThkGQ_L-QkYY0",tags:["muzik"]},
+        {label:"Nicos Weg A1",url:"https://learngerman.dw.com/tr/nicos-weg/c-54846011",tags:["nicos","online"]},
+        {label:"Quizlet · A1 Menschen Kelime Alıştırmaları",url:"https://quizlet.com/onurqlp/folders/menschen-a1?x=1xqt&i=3m8fpg",tags:["quizlet"]},
+        {label:"Menschen Online Alıştırmalar · Genel",url:"https://www.hueber.de/menschen/lernen/uebungen",tags:["online"]},
+        {label:"Menschen Online Alıştırmalar · Arbeitsbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=arbeitsbuch",tags:["online"]},
+        {label:"A1 Kısa Konu Anlatımları · Ünite 1–3",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZFg8jGfuZqcMvQEPS6Dubaj",tags:["konu","video"]},
+        {label:"A1 Kısa Konu Anlatımları · Ünite 3–9",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZFaNGGwJVk4Y2F4moEsCY76",tags:["konu","video"]},
+        {label:"A1 Kısa Konu Anlatımları · Ünite 10–12",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZHrt1mHEz_heegM9KlCfeVw",tags:["konu","video"]},
+        {label:"A1 Kısa Konu Anlatımları · Ünite 13–18",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZGZv5oqWOqn-MUNvMa6d_JQ",tags:["konu","video"]},
+        {label:"A1 Kısa Konu Anlatımları · Ünite 18–24",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZHcKC5tsXwGulBB3SDj6bcp",tags:["konu","video"]}
+      ],
+      A2:[
+        {label:"A2 Ders Materyalleri / Yararlı Materyaller",url:"https://drive.google.com/embeddedfolderview?id=1eRkHhSQ0cVnbMVOtvR-nDcOZRUFJOEKH#grid",tags:["ders","ek"]},
+        {label:"A2 Menschen Ders Videoları",url:"https://drive.google.com/embeddedfolderview?id=10KGAPnOKlfd3trMtY4paFsJDCbGNok9k#grid",tags:["video"]},
+        {label:"A2 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1zA2N_LlWTlHmUeEE1uay1pORqTvQBbSm#grid",tags:["sinav","ek"]},
+        {label:"Arbeitsbuch Dinlemeleri Nasıl İndiririm?",url:"https://www.youtube.com/embed/GHf6eOr6MU0",tags:["dinleme","video"]},
+        {label:"A2 Konuşma Kalıpları",url:"https://drive.google.com/embeddedfolderview?id=1v1KnsUELnxaqwKEhN_8ruqGDOkHbrYFG#grid",tags:["konu","ek"]},
+        {label:"A2 Konu Anlatım Videoları",url:"https://drive.google.com/embeddedfolderview?id=1dkvJRQmwMAy4-xima2GhujCnFhRwq63B#grid",tags:["konu","video"]},
+        {label:"YouTube Almanca Müzikler Playlist",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZGaC8tkVghThkGQ_L-QkYY0",tags:["muzik"]},
+        {label:"Quizlet · A2 Menschen Kelime Alıştırmaları",url:"https://quizlet.com/Saalihyilmazz/folders/menschen-a2?i=195vch&x=1xqY",tags:["quizlet"]},
+        {label:"Menschen Online Alıştırmalar · Kursbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=kursbuch",tags:["online"]},
+        {label:"Menschen Online Alıştırmalar · Arbeitsbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=arbeitsbuch",tags:["online"]}
+      ],
+      B1:[
+        {label:"B1 Ders Dosyaları",url:"https://drive.google.com/embeddedfolderview?id=1-4HicuJ5pDdyZim4mT_2ougN2v-vEwPD#grid",tags:["ders"]},
+        {label:"B1 Yararlı Videolar ve Materyaller",url:"https://drive.google.com/embeddedfolderview?id=1AnFbEW5pq2G6_7y2tA1-EReVj_LBibTm#grid",tags:["ek","video"]},
+        {label:"B1 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1fJ10MSgOCluvbN7GQVTn7hU-WHbRZoDB#grid",tags:["sinav","ek"]},
+        {label:"B1 Bilgilendirme Dokümanı",url:"https://docs.google.com/document/d/1__fPtBM9tD_eNiaz88XTlO1VS-6P3ophA3x4FJyirXE/preview",tags:["genel","ders"]},
+        {label:"Almanca Dergi & Gazete",url:"https://drive.google.com/embeddedfolderview?id=1fvIHKArOr8QCOryBSK7-BdXNZmb04XNU#grid",tags:["okuma","dergi"]},
+        {label:"B1–B2 Okuma Metinleri",url:"https://drive.google.com/embeddedfolderview?id=1Db5TITLZrBDc01FptVUm0_VoLDdSVG3x#grid",tags:["okuma"]},
+        {label:"Arbeitsbuch Dinlemeleri Nasıl İndiririm?",url:"https://www.youtube.com/embed/GHf6eOr6MU0",tags:["dinleme","video"]},
+        {label:"Menschen Online Alıştırmalar · Kursbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=kursbuch",tags:["online"]},
+        {label:"Menschen Online Alıştırmalar · Arbeitsbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=arbeitsbuch",tags:["online"]},
+        {label:"Kitap · B1/B2",url:"https://drive.google.com/embeddedfolderview?id=1nwBOKfm6XL5TQZKNpQTonkJ21Qe5oF-w#grid",tags:["kitap","ders"]},
+        {label:"YouTube Almanca Müzikler Playlist",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZGaC8tkVghThkGQ_L-QkYY0",tags:["muzik"]}
+      ],
+      B2:[
+        {label:"Kitap · B1/B2",url:"https://drive.google.com/embeddedfolderview?id=1nwBOKfm6XL5TQZKNpQTonkJ21Qe5oF-w#grid",tags:["kitap","ders"]},
+        {label:"B2 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1cQSd1Jjo8hvFhVHCJrwdzE8JMwMJnQZ9#grid",tags:["sinav","ek","online"]},
+        {label:"B1–B2 Okuma Metinleri",url:"https://drive.google.com/embeddedfolderview?id=1Db5TITLZrBDc01FptVUm0_VoLDdSVG3x#grid",tags:["okuma"]},
+        {label:"Almanca Dergi & Gazete",url:"https://drive.google.com/embeddedfolderview?id=1fvIHKArOr8QCOryBSK7-BdXNZmb04XNU#grid",tags:["okuma","dergi"]},
+        {label:"B1–B2 Yararlı Videolar ve Materyaller",url:"https://drive.google.com/embeddedfolderview?id=1AnFbEW5pq2G6_7y2tA1-EReVj_LBibTm#grid",tags:["ek","video"]},
+        {label:"B2 YouTube Playlist",url:"https://www.youtube.com/embed/videoseries?list=PLk1fjOl39-51lvdiuQYsLW-0aGIdNNknA",tags:["video","konu"]},
+        {label:"Arbeitsbuch Dinlemeleri Nasıl İndiririm?",url:"https://www.youtube.com/embed/GHf6eOr6MU0",tags:["dinleme","video"]},
+        {label:"YouTube Almanca Müzikler Playlist",url:"https://www.youtube.com/embed/videoseries?list=PLlPnminIi7ZGaC8tkVghThkGQ_L-QkYY0",tags:["muzik"]},
+        {label:"Menschen Online Alıştırmalar · Kursbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=kursbuch",tags:["online"]},
+        {label:"Menschen Online Alıştırmalar · Arbeitsbuch",url:"https://www.hueber.de/menschen/lernen/uebungen?bestandteil=arbeitsbuch",tags:["online"]}
+      ],
+      SINAV:[
+        {label:"A1 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1YolSViv4puykU6wfwTrQ2eswN9MhbCq8#grid",tags:["sinav","A1","ek"]},
+        {label:"A2 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1zA2N_LlWTlHmUeEE1uay1pORqTvQBbSm#grid",tags:["sinav","A2","ek"]},
+        {label:"B1 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1fJ10MSgOCluvbN7GQVTn7hU-WHbRZoDB#grid",tags:["sinav","B1","ek"]},
+        {label:"B2 Sınav Hazırlık",url:"https://drive.google.com/embeddedfolderview?id=1cQSd1Jjo8hvFhVHCJrwdzE8JMwMJnQZ9#grid",tags:["sinav","B2","ek","online"]}
+      ]
+    };
+
+    const els = {
+      statusText:document.getElementById("statusText"),
+      statusDot:document.getElementById("statusDot"),
+      loginBtn:document.getElementById("loginBtn"),
+      messageBox:document.getElementById("messageBox"),
+      classCodeInput:document.getElementById("classCodeInput"),
+      gateSection:document.getElementById("gateSection"),
+      librarySection:document.getElementById("librarySection"),
+      activeCodeLabel:document.getElementById("activeCodeLabel"),
+      viewerTitle:document.getElementById("viewerTitle"),
+      viewerMeta:document.getElementById("viewerMeta"),
+      searchInput:document.getElementById("searchInput"),
+      resourceList:document.getElementById("resourceList"),
+      libraryFrame:document.getElementById("libraryFrame"),
+      emptyState:document.getElementById("emptyState"),
+      directLinkTop:document.getElementById("directLinkTop"),
+      directLinkBottom:document.getElementById("directLinkBottom"),
+      filterDetails:document.getElementById("filterDetails"),
+      fabMenu:document.getElementById("fabMenu")
+    };
+
+    let currentLevel = "A1";
+    let viewMode = "kategori";
+    let activeTags = new Set();
+    let searchQuery = "";
+
+    function normalizeCode(code){ return String(code || "").trim().toLowerCase(); }
+
+    function collectCodesFromAny(input, bucket = []){
+      if(!input) return bucket;
+
+      if(Array.isArray(input)){
+        input.forEach(item => collectCodesFromAny(item,bucket));
+        return bucket;
       }
 
-      const now = new Date();
-      const expireDate = new Date(group.expires + "T23:59:59");
-
-      if (now > expireDate) {
-        err.textContent = "Bu kodun genel kullanım süresi dolmuştur.";
-        err.hidden = false;
-        return false;
+      if(typeof input === "object"){
+        Object.values(input).forEach(value => collectCodesFromAny(value,bucket));
+        return bucket;
       }
 
-      const storageKey = "ayda_first_login_" + trFold(key);
-      const firstLogin = localStorage.getItem(storageKey);
+      if(typeof input === "string" || typeof input === "number"){
+        const code = normalizeCode(input);
+        if(code && /^[a-z0-9ğüşıöç._-]{2,40}$/i.test(code)) bucket.push(code);
+      }
+      return bucket;
+    }
 
-      if (!firstLogin) {
-        localStorage.setItem(storageKey, new Date().toISOString());
-      } else {
-        const firstDate = new Date(firstLogin);
-        const diffDays = (now - firstDate) / (1000 * 60 * 60 * 24);
+    function parseJsCodes(text){
+      const found = [];
+      const quoted = text.match(/["'`]([^"'`]{2,40})["'`]/g) || [];
+      quoted.forEach(raw => {
+        const code = normalizeCode(raw.slice(1,-1));
+        if(/^[a-z0-9ğüşıöç._-]{2,40}$/i.test(code)) found.push(code);
+      });
+      return found;
+    }
 
-        if (diffDays > Number(group.durationDays)) {
-          err.textContent = "Bu kodun ilk girişten sonraki kullanım süresi dolmuştur.";
-          err.hidden = false;
-          return false;
+    async function fetchWithTimeout(url, ms = 7000){
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), ms);
+      try{
+        const res = await fetch(url + "?v=" + Date.now(), { cache:"no-store", signal:controller.signal });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        return await res.text();
+      }finally{
+        clearTimeout(timer);
+      }
+    }
+
+    async function loadPasswords(){
+      setStatus("warn","Şifre sistemi yükleniyor...");
+      els.loginBtn.disabled = true;
+      showMessage("info","Merkezi şifre listesi yükleniyor. GitHub Pages üzerinden güncel kodlar alınacak.");
+
+      const loaded = [];
+      const errors = [];
+
+      for(const url of PASSWORD_ENDPOINTS){
+        try{
+          const text = await fetchWithTimeout(url);
+          let codes = [];
+
+          if(url.endsWith(".json")){
+            const data = JSON.parse(text);
+            codes = collectCodesFromAny(data);
+          }else{
+            codes = parseJsCodes(text);
+          }
+
+          codes.forEach(code => loaded.push(code));
+        }catch(err){
+          errors.push(url + " → " + err.message);
         }
       }
 
-      return true;
+      EMERGENCY_LOCAL_CODES.forEach(code => loaded.push(normalizeCode(code)));
 
-    } catch (error) {
-      err.textContent = "Şifre sistemi yüklenemedi. Lütfen tekrar deneyiniz.";
-      err.hidden = false;
-      return false;
-    }
-  }
+      VALID_CODES = new Set(loaded.filter(Boolean));
+      passwordSourceLoaded = VALID_CODES.size > 0;
 
-  $('go').onclick = async () => {
-    const key = trFold(codeInput.value.trim());
-
-    if(!classes[key]){
-      err.textContent = "Bu kodla eşleşen sınıf bulunamadı.";
-      err.hidden = false;
-      return;
+      if(passwordSourceLoaded){
+        setStatus("ok", VALID_CODES.size + " aktif kod yüklendi");
+        els.loginBtn.disabled = false;
+        showMessage("info","Şifre sistemi hazır. Sınıf kodunu girerek kütüphaneye giriş yapabilirsin.");
+      }else{
+        setStatus("bad","Şifre listesi alınamadı");
+        els.loginBtn.disabled = true;
+        showMessage("error","Şifre dosyası okunamadı. ayda-pass deposunda passwords.json dosyasının public olduğundan ve GitHub Pages ile yayınlandığından emin ol. Denenen kaynaklar: " + errors.join(" | "));
+      }
     }
 
-    const allowed = await checkCentralPassword(key);
-
-    if(allowed){
-      err.hidden = true;
-      renderClass(key);
+    function setStatus(type,text){
+      els.statusText.textContent = text;
+      els.statusDot.className = "dot " + (type === "ok" ? "ok" : type === "bad" ? "bad" : "warn");
     }
-  };
 
-  $('change').onclick = e => {
-    e.preventDefault();
-    klass.hidden = true;
-    login.hidden = false;
-    jumpBtn.hidden = true;
-    codeInput.focus();
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
+    function showMessage(type,text){
+      els.messageBox.className = "message show " + type;
+      els.messageBox.textContent = text;
+    }
 
-  jumpBtn.onclick = scrollToClass;
-</script>
+    function togglePassword(){
+      els.classCodeInput.type = els.classCodeInput.type === "password" ? "text" : "password";
+    }
 
+    function unlockLibrary(){
+      const code = normalizeCode(els.classCodeInput.value);
+
+      if(!passwordSourceLoaded){
+        showMessage("error","Şifre listesi henüz yüklenmedi. Sayfayı yenileyip tekrar dene.");
+        return;
+      }
+      if(!code){
+        showMessage("error","Lütfen sınıf kodunu gir.");
+        return;
+      }
+      if(!VALID_CODES.has(code)){
+        showMessage("error","Kod hatalı görünüyor. Sınıf öğretmeninden aldığın kodu kontrol ederek tekrar dene.");
+        return;
+      }
+
+      sessionStorage.setItem("aydaLibraryUnlocked","1");
+      sessionStorage.setItem("aydaLibraryCode",code);
+      openLibrary(code);
+    }
+
+    function openLibrary(code){
+      els.gateSection.style.display = "none";
+      els.librarySection.classList.add("open");
+      els.activeCodeLabel.textContent = "Kod: " + maskCode(code || "aktif");
+      currentLevel = "A1";
+      viewMode = "kategori";
+      activeTags.clear();
+      searchQuery = "";
+      els.searchInput.value = "";
+      syncButtons();
+      renderResources();
+    }
+
+    function logout(){
+      sessionStorage.removeItem("aydaLibraryUnlocked");
+      sessionStorage.removeItem("aydaLibraryCode");
+      els.librarySection.classList.remove("open");
+      els.gateSection.style.display = "grid";
+      els.classCodeInput.value = "";
+      els.libraryFrame.src = "about:blank";
+      showMessage("info","Çıkış yapıldı. Tekrar giriş için sınıf kodunu yazabilirsin.");
+    }
+
+    function maskCode(code){
+      if(code.length <= 4) return "••" + code.slice(-1);
+      return code.slice(0,2) + "••••" + code.slice(-2);
+    }
+
+    function selectLevel(event){
+      currentLevel = event.currentTarget.dataset.level;
+      syncButtons();
+      renderResources();
+    }
+
+    function selectView(event){
+      viewMode = event.currentTarget.dataset.mode;
+      syncButtons();
+      renderResources();
+    }
+
+    function toggleTag(event){
+      const tag = event.currentTarget.dataset.tag;
+      if(activeTags.has(tag)) activeTags.delete(tag);
+      else activeTags.add(tag);
+      syncButtons();
+    }
+
+    function applyFilters(){
+      renderResources();
+      els.filterDetails.open = false;
+    }
+
+    function clearFilters(){
+      activeTags.clear();
+      searchQuery = "";
+      els.searchInput.value = "";
+      syncButtons();
+      renderResources();
+    }
+
+    function syncButtons(){
+      document.querySelectorAll("[data-level]").forEach(btn => btn.classList.toggle("active",btn.dataset.level === currentLevel));
+      document.querySelectorAll("[data-mode]").forEach(btn => btn.classList.toggle("active",btn.dataset.mode === viewMode));
+      document.querySelectorAll("[data-tag]").forEach(btn => btn.classList.toggle("active",activeTags.has(btn.dataset.tag)));
+    }
+
+    function getResources(){
+      let list = CONTENT[currentLevel] || [];
+      if(viewMode === "kategori" && activeTags.size){
+        list = list.filter(item => (item.tags || []).some(tag => activeTags.has(tag)));
+      }
+      if(searchQuery){
+        const q = searchQuery.toLowerCase();
+        list = list.filter(item => item.label.toLowerCase().includes(q) || (item.tags || []).join(" ").toLowerCase().includes(q));
+      }
+      return list;
+    }
+
+    function renderResources(){
+      const resources = getResources();
+      const modeLabel = viewMode === "liste" ? "Tam liste" : "Kategori";
+      els.viewerTitle.textContent = (LEVEL_LABELS[currentLevel] || currentLevel) + " · " + modeLabel;
+      els.viewerMeta.textContent = resources.length
+        ? resources.length + " kaynak listeleniyor. Kaynağa tıklayınca aşağıda açılır."
+        : "Bu seçimde kaynak bulunamadı.";
+
+      els.resourceList.innerHTML = "";
+
+      if(!resources.length){
+        els.libraryFrame.src = "about:blank";
+        els.emptyState.classList.add("show");
+        setDirectLink("");
+        return;
+      }
+
+      els.emptyState.classList.remove("show");
+      resources.forEach((res,index) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "resource-chip" + (index === 0 ? " active" : "");
+        btn.textContent = res.label;
+        btn.onclick = () => openResource(res,btn);
+        els.resourceList.appendChild(btn);
+      });
+
+      openResource(resources[0], els.resourceList.querySelector(".resource-chip"));
+    }
+
+    function openResource(resource,button){
+      document.querySelectorAll(".resource-chip").forEach(btn => btn.classList.remove("active"));
+      if(button) button.classList.add("active");
+      els.libraryFrame.src = resource.url;
+      setDirectLink(resource.url);
+    }
+
+    function setDirectLink(url){
+      [els.directLinkTop, els.directLinkBottom].forEach(link => {
+        if(!url){
+          link.href = "#";
+          link.style.visibility = "hidden";
+        }else{
+          link.href = url;
+          link.style.visibility = "visible";
+        }
+      });
+    }
+
+    els.searchInput.addEventListener("input", function(){
+      searchQuery = this.value.trim().toLowerCase();
+      renderResources();
+    });
+
+    function toggleFab(){ els.fabMenu.classList.toggle("open"); }
+
+    document.addEventListener("click", function(e){
+      const fab = document.getElementById("helpFab");
+      if(fab && !fab.contains(e.target)) els.fabMenu.classList.remove("open");
+    });
+
+    function setupContactLinks(){
+      const text = encodeURIComponent("Aradığım kaynağı bulamadım. Yardımcı olabilir misiniz?");
+      const number = "905409122503";
+      document.getElementById("waLink").href = `https://wa.me/${number}?text=${text}`;
+      document.getElementById("smsLink").href = `sms:+${number}?&body=${text}`;
+    }
+
+    document.addEventListener("DOMContentLoaded", async function(){
+      setupContactLinks();
+      await loadPasswords();
+
+      const alreadyUnlocked = sessionStorage.getItem("aydaLibraryUnlocked") === "1";
+      const code = sessionStorage.getItem("aydaLibraryCode") || "aktif";
+      if(alreadyUnlocked && passwordSourceLoaded){
+        openLibrary(code);
+      }
+    });
+  </script>
 </body>
 </html>
