@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AYDA A1 Çalışma</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
+    .box {
+      max-width: 520px;
+      margin: 40px auto;
+      padding: 24px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    h1, h2 { color: #234078; }
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccd6e0;
+      border-radius: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+    }
+    button, .btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: #234078;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      margin: 10px 0;
+    }
+    .card {
+      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e1e7ef;
+      border-radius: 14px;
+      margin: 12px 0;
+    }
+    .msg {
+      color: #b00020;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="aydaLoginBox" class="box">
+    <h1>AYDA A1 Çalışma Alanı</h1>
+    <p>Devam etmek için sınıf kodunuzu giriniz.</p>
+
+    <input id="aydaPasswordInput" placeholder="Sınıf kodu">
+    <button onclick="aydaCheckPassword()">Giriş Yap</button>
+
+    <p id="aydaLoginMessage" class="msg"></p>
+  </div>
+
+  <div id="aydaProtectedContent" style="display:none;">
+    <div class="box">
+      <h1>A1 Çalışma Sitesi</h1>
+      <p>Bu alan sadece doğru sınıf kodu girilince görünür.</p>
+
+      <div class="card">
+        <h2>1. Kelime Kartları</h2>
+        <p><b>der Name</b> = isim</p>
+        <p><b>die Stadt</b> = şehir</p>
+        <p><b>das Land</b> = ülke</p>
+      </div>
+
+      <div class="card">
+        <h2>2. Mini Test</h2>
+        <p><b>Ich ___ Onur.</b></p>
+        <button onclick="alert('Doğru cevap: bin')">Cevabı Göster</button>
+      </div>
+
+      <div class="card">
+        <h2>3. Ders Linkleri</h2>
+        <a class="btn" href="https://www.aydadil.com/" target="_blank">AYDA Web Sitesi</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://onurqlp.github.io/ayda-pass/access-control.js"></script>
+
+</body>
+</html>
