@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AYDA · Online Kütüphane</title>
-  <meta name="color-scheme" content="light" />
   <meta name="theme-color" content="#234078" />
+  <meta name="color-scheme" content="light" />
+  <title>AYDA · Online Kütüphane 2027</title>
 
   <style>
     :root{
       --ayda:#234078;
       --ayda-2:#315992;
-      --ayda-dark:#172b52;
+      --ayda-3:#6d8fd2;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --soft:#eef4ff;
+      --soft-2:#f8fbff;
+      --card:rgba(255,255,255,.78);
+      --card-solid:#ffffff;
+      --line:rgba(35,64,120,.13);
       --gold:#c9a24d;
-      --bg:#f4f7ff;
-      --card:#ffffff;
-      --ink:#111827;
-      --muted:#6b7280;
-      --soft:#eef3ff;
-      --border:rgba(35,64,120,.12);
-      --danger:#b91c1c;
-      --success:#15803d;
-      --shadow:0 22px 60px rgba(15,23,42,.10);
-      --shadow-soft:0 10px 28px rgba(15,23,42,.07);
-      --r:22px;
-      --full:999px;
+      --green:#16a34a;
+      --red:#dc2626;
+      --orange:#f59e0b;
+      --shadow:0 26px 80px rgba(15,23,42,.14);
+      --shadow-soft:0 14px 34px rgba(15,23,42,.09);
+      --r-xl:34px;
+      --r-lg:24px;
+      --r-md:18px;
+      --pill:999px;
+      --blur:blur(22px);
     }
 
     *{box-sizing:border-box}
@@ -32,90 +37,147 @@
     body{
       margin:0;
       min-height:100vh;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at top left,rgba(35,64,120,.20),transparent 31%),
-        radial-gradient(circle at top right,rgba(201,162,77,.16),transparent 28%),
-        linear-gradient(135deg,#f8fbff 0%,#eef3ff 48%,#e5edff 100%);
+        radial-gradient(circle at 8% 0%,rgba(35,64,120,.28),transparent 31%),
+        radial-gradient(circle at 92% 4%,rgba(201,162,77,.22),transparent 32%),
+        radial-gradient(circle at 70% 72%,rgba(49,89,146,.16),transparent 35%),
+        linear-gradient(135deg,#f7fbff 0%,#edf4ff 48%,#e5eeff 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(35,64,120,.035) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(35,64,120,.035) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 84%);
     }
 
     button,input,a{font:inherit}
     button{cursor:pointer}
+    a{color:inherit}
 
-    .page{
-      width:min(1220px,100%);
+    .app{
+      width:min(1440px,100%);
       margin:0 auto;
       padding:18px;
     }
 
-    .shell{
-      background:rgba(255,255,255,.86);
-      border:1px solid rgba(255,255,255,.75);
-      box-shadow:var(--shadow);
-      border-radius:30px;
+    .glass-shell{
+      position:relative;
       overflow:hidden;
-      backdrop-filter:blur(18px);
+      min-height:calc(100vh - 36px);
+      border-radius:38px;
+      border:1px solid rgba(255,255,255,.72);
+      background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(238,244,255,.70));
+      box-shadow:var(--shadow);
+      backdrop-filter:var(--blur);
+    }
+
+    .glass-shell::after{
+      content:"";
+      position:absolute;
+      top:-160px;
+      right:-120px;
+      width:390px;
+      height:390px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(201,162,77,.20),transparent 70%);
+      pointer-events:none;
     }
 
     .topbar{
+      position:sticky;
+      top:0;
+      z-index:10;
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap:14px;
-      padding:18px 20px;
-      border-bottom:1px solid var(--border);
-      background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(238,243,255,.84));
+      padding:18px 22px;
+      background:rgba(255,255,255,.72);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:var(--blur);
     }
 
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:13px;
       min-width:0;
     }
 
     .logo{
-      width:44px;
-      height:44px;
-      border-radius:16px;
+      width:48px;
+      height:48px;
+      border-radius:18px;
       display:grid;
       place-items:center;
       color:#fff;
-      font-weight:900;
-      letter-spacing:.02em;
-      background:linear-gradient(135deg,var(--ayda),#3d6ab2);
-      box-shadow:0 12px 24px rgba(35,64,120,.34);
+      font-weight:950;
+      letter-spacing:-.04em;
+      background:linear-gradient(135deg,var(--ayda),#4774bf);
+      box-shadow:0 16px 34px rgba(35,64,120,.34);
       flex:0 0 auto;
+      position:relative;
+      overflow:hidden;
     }
 
+    .logo::after{
+      content:"";
+      position:absolute;
+      inset:6px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.22);
+    }
+
+    .brand-title{min-width:0}
     .brand h1{
       margin:0;
       font-size:18px;
-      line-height:1.15;
-      letter-spacing:-.02em;
+      line-height:1.08;
+      letter-spacing:-.035em;
     }
-
     .brand p{
       margin:4px 0 0;
       color:var(--muted);
       font-size:12px;
       line-height:1.3;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:640px;
     }
 
-    .status-pill{
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .status-pill,.mini-pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:8px 12px;
-      border-radius:var(--full);
+      border-radius:var(--pill);
+      border:1px solid rgba(35,64,120,.12);
+      background:rgba(35,64,120,.07);
       color:var(--ayda);
-      background:rgba(35,64,120,.08);
-      border:1px solid rgba(35,64,120,.10);
+      padding:9px 12px;
       font-size:12px;
-      font-weight:650;
+      font-weight:800;
       white-space:nowrap;
     }
+
+    .mini-pill{background:#fff;color:#334155;border-color:rgba(148,163,184,.30)}
 
     .dot{
       width:8px;
@@ -123,336 +185,387 @@
       border-radius:50%;
       background:#94a3b8;
       box-shadow:0 0 0 4px rgba(148,163,184,.20);
-      flex:0 0 auto;
     }
     .dot.ok{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.18)}
     .dot.warn{background:#f59e0b;box-shadow:0 0 0 4px rgba(245,158,11,.18)}
     .dot.bad{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.18)}
 
     .gate{
+      position:relative;
+      z-index:1;
       display:grid;
-      grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);
-      gap:18px;
-      padding:20px;
+      grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
+      gap:20px;
+      padding:22px;
     }
 
-    .hero-card,.preview-card,.panel{
-      background:rgba(255,255,255,.92);
-      border:1px solid var(--border);
-      border-radius:var(--r);
+    .hero,.login-card,.feature-card,.panel,.viewer-panel{
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:var(--r-xl);
       box-shadow:var(--shadow-soft);
+      backdrop-filter:var(--blur);
     }
 
-    .hero-card{padding:24px}
+    .hero{
+      padding:30px;
+      display:flex;
+      flex-direction:column;
+      min-height:520px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -110px -150px auto;
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(35,64,120,.15),transparent 68%);
+    }
+
     .eyebrow{
+      width:max-content;
       display:inline-flex;
       align-items:center;
-      gap:7px;
-      padding:6px 10px;
-      border-radius:var(--full);
-      background:rgba(35,64,120,.08);
+      gap:8px;
+      padding:8px 12px;
+      border-radius:var(--pill);
       color:var(--ayda);
+      background:rgba(35,64,120,.08);
+      border:1px solid rgba(35,64,120,.10);
       font-size:11px;
-      font-weight:800;
-      letter-spacing:.08em;
+      font-weight:950;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .hero-card h2{
-      margin:14px 0 8px;
-      font-size:clamp(25px,4vw,42px);
-      line-height:1.04;
-      letter-spacing:-.045em;
-      color:#0f172a;
+    .hero h2{
+      margin:17px 0 12px;
+      max-width:820px;
+      font-size:clamp(34px,5.6vw,68px);
+      line-height:.94;
+      letter-spacing:-.07em;
+      color:#0b1220;
     }
 
-    .hero-card .lead{
+    .hero .lead{
       margin:0;
-      max-width:650px;
-      color:#4b5563;
-      font-size:15px;
-      line-height:1.6;
+      max-width:720px;
+      color:#475569;
+      font-size:16px;
+      line-height:1.72;
     }
 
-    .login-box{
-      margin-top:18px;
+    .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:10px;
-      align-items:end;
+      margin-top:auto;
+      padding-top:26px;
+      position:relative;
+      z-index:1;
+    }
+
+    .stat{
+      border-radius:24px;
+      border:1px solid rgba(35,64,120,.11);
+      background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(238,244,255,.74));
+      padding:15px;
+      min-height:110px;
+    }
+    .stat strong{display:block;font-size:24px;color:var(--ayda);letter-spacing:-.045em}
+    .stat span{display:block;margin-top:6px;color:var(--muted);font-size:12px;line-height:1.38}
+
+    .side-stack{display:grid;gap:16px}
+
+    .login-card{
+      padding:22px;
+      background:
+        radial-gradient(circle at 90% 0%,rgba(201,162,77,.20),transparent 36%),
+        linear-gradient(145deg,rgba(255,255,255,.88),rgba(238,244,255,.76));
+    }
+
+    .login-card h3{margin:0;font-size:22px;letter-spacing:-.04em}
+    .login-card p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+
+    .login-form{
+      margin-top:17px;
+      display:grid;
+      gap:10px;
     }
 
     .field label{
       display:block;
-      margin:0 0 6px;
-      color:var(--muted);
+      margin:0 0 7px;
+      color:#64748b;
       font-size:11px;
-      font-weight:800;
-      letter-spacing:.11em;
+      font-weight:950;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
     .input-wrap{
       display:flex;
       align-items:center;
-      gap:8px;
+      gap:9px;
+      min-height:54px;
       border:1px solid rgba(35,64,120,.18);
-      border-radius:18px;
       background:#fff;
-      padding:0 12px;
-      transition:.16s ease;
+      border-radius:20px;
+      padding:0 13px;
+      transition:.18s ease;
     }
-
     .input-wrap:focus-within{
-      border-color:rgba(35,64,120,.60);
-      box-shadow:0 0 0 5px rgba(35,64,120,.10);
+      border-color:rgba(35,64,120,.58);
+      box-shadow:0 0 0 6px rgba(35,64,120,.10);
+      transform:translateY(-1px);
     }
-
     .input-wrap input{
       width:100%;
       border:0;
       outline:0;
-      padding:13px 0;
       background:transparent;
-      font-size:15px;
+      padding:15px 0;
+      font-size:16px;
+      color:var(--ink);
     }
-
     .eye-btn{
       border:0;
-      background:transparent;
-      color:var(--muted);
-      padding:4px;
-      border-radius:10px;
+      background:rgba(100,116,139,.08);
+      color:#64748b;
+      border-radius:12px;
+      width:34px;
+      height:34px;
     }
 
-    .primary-btn,.soft-btn,.ghost-btn{
+    .primary-btn,.soft-btn,.ghost-btn,.danger-btn{
+      min-height:44px;
+      border-radius:17px;
+      padding:11px 15px;
       border:0;
-      border-radius:18px;
-      padding:13px 17px;
-      font-weight:800;
-      font-size:14px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:8px;
-      transition:.15s ease;
-      white-space:nowrap;
+      font-size:13px;
+      font-weight:900;
+      line-height:1;
       text-decoration:none;
+      transition:.16s ease;
+      white-space:nowrap;
     }
-
     .primary-btn{
       color:#fff;
       background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
-      box-shadow:0 14px 28px rgba(35,64,120,.32);
+      box-shadow:0 16px 30px rgba(35,64,120,.30);
     }
-    .primary-btn:hover{transform:translateY(-1px);box-shadow:0 18px 36px rgba(35,64,120,.40)}
-    .primary-btn:disabled{opacity:.58;cursor:not-allowed;transform:none;box-shadow:none}
-
-    .soft-btn{
-      color:var(--ayda);
-      background:rgba(35,64,120,.08);
-      border:1px solid rgba(35,64,120,.12);
-    }
-    .ghost-btn{
-      color:#334155;
-      background:#fff;
-      border:1px solid rgba(148,163,184,.45);
-    }
+    .primary-btn:hover{transform:translateY(-1px);box-shadow:0 20px 42px rgba(35,64,120,.38)}
+    .primary-btn:disabled{opacity:.52;cursor:not-allowed;transform:none;box-shadow:none}
+    .soft-btn{color:var(--ayda);background:rgba(35,64,120,.08);border:1px solid rgba(35,64,120,.12)}
+    .ghost-btn{color:#334155;background:#fff;border:1px solid rgba(148,163,184,.35)}
+    .danger-btn{color:#991b1b;background:#fff1f2;border:1px solid rgba(220,38,38,.12)}
+    .soft-btn:hover,.ghost-btn:hover,.danger-btn:hover{transform:translateY(-1px)}
 
     .message{
       display:none;
       margin-top:12px;
-      padding:10px 12px;
-      border-radius:16px;
+      padding:12px 13px;
+      border-radius:18px;
       font-size:12px;
-      line-height:1.45;
+      line-height:1.5;
       border:1px solid transparent;
     }
     .message.show{display:block}
-    .message.error{color:var(--danger);background:#fff1f2;border-color:rgba(185,28,28,.14)}
     .message.info{color:var(--ayda);background:rgba(35,64,120,.07);border-color:rgba(35,64,120,.12)}
+    .message.error{color:#991b1b;background:#fff1f2;border-color:rgba(220,38,38,.14)}
 
-    .quick-info{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:8px;
-      margin-top:18px;
-    }
-
-    .mini-stat{
-      border:1px solid rgba(35,64,120,.10);
-      background:linear-gradient(135deg,#fff,rgba(238,243,255,.72));
-      border-radius:18px;
-      padding:12px;
-    }
-    .mini-stat strong{display:block;font-size:17px;color:var(--ayda)}
-    .mini-stat span{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.25}
-
-    .preview-card{
-      padding:18px;
-      background:
-        radial-gradient(circle at top right,rgba(201,162,77,.20),transparent 42%),
-        linear-gradient(135deg,var(--ayda-dark),var(--ayda));
+    .feature-card{
+      padding:19px;
+      background:linear-gradient(145deg,var(--ayda),var(--ayda-2));
       color:#fff;
-      min-height:100%;
+      overflow:hidden;
+      position:relative;
     }
-
-    .preview-card h3{margin:0;font-size:16px}
-    .preview-card p{margin:8px 0 0;color:#dbeafe;font-size:13px;line-height:1.55}
-    .preview-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
-    .preview-item{
-      border-radius:18px;
-      padding:12px;
-      background:rgba(255,255,255,.11);
-      border:1px solid rgba(255,255,255,.16);
-      min-height:82px;
+    .feature-card::after{
+      content:"";
+      position:absolute;
+      right:-55px;
+      top:-55px;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
     }
-    .preview-item b{display:block;font-size:13px;margin-top:7px}
-    .preview-item span{display:block;color:#dbeafe;font-size:11px;margin-top:3px;line-height:1.35}
+    .feature-card h3{margin:0;font-size:17px;letter-spacing:-.02em;position:relative;z-index:1}
+    .feature-card p{margin:8px 0 0;color:#dbeafe;font-size:13px;line-height:1.55;position:relative;z-index:1}
+    .feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px;position:relative;z-index:1}
+    .feature-item{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.11);border-radius:20px;padding:12px;min-height:86px}
+    .feature-item b{display:block;margin-top:8px;font-size:13px}
+    .feature-item span{display:block;margin-top:4px;color:#dbeafe;font-size:11px;line-height:1.35}
 
-    .library{display:none;padding:20px;border-top:1px solid var(--border)}
-    .library.open{display:block;animation:fade .18s ease-out both}
+    .library{
+      display:none;
+      padding:18px;
+      border-top:1px solid var(--line);
+    }
+    .library.open{display:block;animation:fade .2s ease-out both}
 
     .workspace{
       display:grid;
-      grid-template-columns:300px minmax(0,1fr);
+      grid-template-columns:320px minmax(0,1fr);
       gap:16px;
+      align-items:start;
     }
 
-    .panel{padding:16px}
-    .panel-title{
-      color:var(--muted);
+    .panel,.viewer-panel{padding:16px;border-radius:30px}
+    .sidebar-sticky{position:sticky;top:92px}
+
+    .class-card{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:22px;
+      border:1px solid rgba(35,64,120,.12);
+      background:linear-gradient(145deg,rgba(35,64,120,.10),rgba(255,255,255,.72));
+    }
+    .class-card strong{display:block;color:var(--ayda);font-size:14px}
+    .class-card span{display:block;margin-top:4px;color:var(--muted);font-size:11px;line-height:1.35}
+
+    .section-label{
+      margin:14px 0 9px;
+      color:#64748b;
       font-size:11px;
-      font-weight:900;
+      font-weight:950;
       text-transform:uppercase;
       letter-spacing:.13em;
-      margin-bottom:10px;
+    }
+    .section-label:first-child{margin-top:0}
+
+    .level-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
     }
 
-    .class-banner{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      padding:13px;
-      border-radius:18px;
-      background:linear-gradient(135deg,rgba(35,64,120,.10),rgba(35,64,120,.04));
-      border:1px solid rgba(35,64,120,.12);
-      margin-bottom:12px;
-    }
-    .class-banner strong{font-size:14px;color:var(--ayda)}
-    .class-banner span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-
-    .logout-btn{
-      border:0;
-      background:#fff;
-      color:#64748b;
-      border-radius:12px;
-      padding:7px 9px;
-      font-size:12px;
-      font-weight:750;
-    }
-
-    .group{margin-top:14px}
-    .group-label{
-      margin:0 0 8px;
-      font-size:11px;
-      color:#64748b;
-      font-weight:900;
-      letter-spacing:.11em;
-      text-transform:uppercase;
-    }
-
-    .btn-grid{display:flex;flex-wrap:wrap;gap:8px}
-    .tab,.chip,.resource-chip{
-      border:1px solid rgba(148,163,184,.45);
+    .tab,.chip,.resource-card-btn{
+      border:1px solid rgba(148,163,184,.34);
       background:#fff;
       color:#172033;
-      border-radius:var(--full);
-      padding:8px 11px;
+      border-radius:18px;
+      padding:10px 11px;
       font-size:12px;
-      font-weight:750;
+      font-weight:850;
       display:inline-flex;
       align-items:center;
-      gap:6px;
-      transition:.14s ease;
+      justify-content:center;
+      gap:7px;
+      transition:.15s ease;
+      min-height:42px;
     }
-    .tab.active,.chip.active,.resource-chip.active{
-      background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
+    .level-grid .tab{justify-content:flex-start}
+    .chip{border-radius:var(--pill);padding:8px 11px;min-height:36px}
+    .tab.active,.chip.active{
       color:#fff;
       border-color:transparent;
-      box-shadow:0 10px 22px rgba(35,64,120,.28);
+      background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
+      box-shadow:0 12px 24px rgba(35,64,120,.26);
       transform:translateY(-1px);
     }
-    .tab:hover:not(.active),.chip:hover:not(.active),.resource-chip:hover:not(.active),.ghost-btn:hover{background:#f8fafc}
+    .tab:hover:not(.active),.chip:hover:not(.active),.resource-card-btn:hover{background:#f8fafc;transform:translateY(-1px)}
 
-    details.filter-box{
-      margin-top:12px;
-      border:1px dashed rgba(35,64,120,.24);
-      border-radius:18px;
-      padding:10px;
-      background:rgba(238,243,255,.50);
-    }
-    details.filter-box summary{
-      cursor:pointer;
-      color:var(--ayda);
-      font-size:12px;
-      font-weight:900;
-      list-style:none;
-    }
-    details.filter-box summary::-webkit-details-marker{display:none}
+    .chip-wrap{display:flex;gap:7px;flex-wrap:wrap}
 
-    .filter-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .sidebar-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 
-    .viewer-head{
+    .viewer-top{
       display:flex;
       justify-content:space-between;
-      gap:12px;
       align-items:flex-start;
-      margin-bottom:12px;
+      gap:14px;
+      margin-bottom:14px;
     }
-    .viewer-head h2{margin:0;font-size:18px;letter-spacing:-.02em}
-    .viewer-head p{margin:4px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
+    .viewer-top h2{margin:0;font-size:24px;letter-spacing:-.045em}
+    .viewer-top p{margin:5px 0 0;color:var(--muted);font-size:12px;line-height:1.45}
 
-    .tools{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin:0 0 10px;
+    .viewer-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+    .search-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:10px;
+      margin-bottom:13px;
     }
     .search{
-      flex:1 1 280px;
       display:flex;
       align-items:center;
-      gap:8px;
-      border:1px solid rgba(148,163,184,.45);
-      border-radius:18px;
-      padding:0 12px;
-      background:#fff;
-    }
-    .search input{width:100%;border:0;outline:0;background:transparent;padding:11px 0;font-size:13px}
-
-    .resource-list{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin:10px 0 12px;
-      max-height:128px;
-      overflow:auto;
-      padding-right:4px;
-    }
-
-    .frame-wrap{
-      position:relative;
-      min-height:430px;
+      gap:9px;
+      min-height:48px;
+      padding:0 14px;
       border-radius:20px;
-      overflow:hidden;
-      border:1px solid rgba(148,163,184,.42);
-      background:
-        repeating-linear-gradient(45deg,rgba(148,163,184,.10),rgba(148,163,184,.10) 10px,rgba(226,232,240,.56) 10px,rgba(226,232,240,.56) 20px);
+      background:#fff;
+      border:1px solid rgba(148,163,184,.34);
+      transition:.16s ease;
     }
-    iframe{width:100%;height:430px;border:0;background:#fff;display:block}
+    .search:focus-within{border-color:rgba(35,64,120,.50);box-shadow:0 0 0 5px rgba(35,64,120,.08)}
+    .search input{width:100%;border:0;outline:0;background:transparent;padding:13px 0;font-size:14px}
+
+    .resource-board{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      max-height:270px;
+      overflow:auto;
+      padding:2px 4px 10px 0;
+      scrollbar-width:thin;
+    }
+
+    .resource-card-btn{
+      width:100%;
+      min-height:96px;
+      border-radius:22px;
+      padding:13px;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      justify-content:space-between;
+      text-align:left;
+      position:relative;
+      overflow:hidden;
+    }
+    .resource-card-btn.active{
+      color:#fff;
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--ayda),var(--ayda-2));
+      box-shadow:0 16px 28px rgba(35,64,120,.28);
+    }
+    .resource-card-btn.active .tag-mini{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.18)}
+    .resource-title{font-size:13px;line-height:1.25;font-weight:950;letter-spacing:-.01em;position:relative;z-index:1}
+    .resource-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;position:relative;z-index:1}
+    .tag-mini{font-size:10px;color:#475569;background:#f1f5f9;border:1px solid rgba(148,163,184,.24);border-radius:var(--pill);padding:4px 7px;font-weight:850}
+
+    .frame-shell{
+      position:relative;
+      overflow:hidden;
+      min-height:500px;
+      border-radius:26px;
+      border:1px solid rgba(148,163,184,.36);
+      background:
+        linear-gradient(45deg,rgba(148,163,184,.09) 25%,transparent 25%),
+        linear-gradient(-45deg,rgba(148,163,184,.09) 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,rgba(148,163,184,.09) 75%),
+        linear-gradient(-45deg,transparent 75%,rgba(148,163,184,.09) 75%),
+        #f8fafc;
+      background-size:22px 22px;
+      background-position:0 0,0 11px,11px -11px,-11px 0;
+    }
+    iframe{width:100%;height:500px;border:0;background:#fff;display:block}
+
     .empty{
       position:absolute;
       inset:0;
@@ -465,217 +578,248 @@
     .empty.show{display:flex}
     .empty-card{
       max-width:430px;
-      border-radius:22px;
-      padding:18px;
-      background:rgba(15,23,42,.90);
+      border-radius:28px;
+      padding:22px;
+      background:rgba(15,23,42,.92);
       color:#e5e7eb;
-      box-shadow:0 24px 60px rgba(15,23,42,.28);
+      box-shadow:0 24px 70px rgba(15,23,42,.30);
     }
-    .empty-card b{color:#fff}
-    .empty-card p{margin:6px 0 0;color:#cbd5e1;font-size:12px;line-height:1.45}
+    .empty-card b{display:block;color:#fff;font-size:16px}
+    .empty-card p{margin:8px 0 0;color:#cbd5e1;font-size:12px;line-height:1.48}
 
     .direct-row{
       display:flex;
       justify-content:space-between;
       align-items:center;
       gap:10px;
-      margin-top:9px;
-      color:var(--muted);
-      font-size:11px;
       flex-wrap:wrap;
+      margin-top:10px;
+      color:#64748b;
+      font-size:11px;
     }
 
-    .direct-row a{
-      color:var(--ayda);
-      text-decoration:none;
-      font-weight:850;
-      background:rgba(35,64,120,.07);
-      border:1px solid rgba(35,64,120,.12);
-      border-radius:var(--full);
-      padding:7px 10px;
+    .library-footer{
+      margin-top:15px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
     }
+    .footer-card{
+      padding:13px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid rgba(148,163,184,.25);
+      color:#475569;
+      font-size:12px;
+      line-height:1.45;
+    }
+    .footer-card b{display:block;color:var(--ayda);font-size:13px;margin-bottom:4px}
 
     .fab{
       position:fixed;
-      right:16px;
-      bottom:16px;
-      z-index:20;
+      right:18px;
+      bottom:18px;
+      z-index:30;
       display:flex;
       flex-direction:column;
-      gap:8px;
       align-items:flex-end;
+      gap:8px;
     }
     .fab-menu{
       display:none;
-      background:#fff;
-      border:1px solid var(--border);
-      box-shadow:var(--shadow-soft);
-      border-radius:18px;
       padding:8px;
+      min-width:220px;
+      border-radius:22px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-soft);
     }
-    .fab-menu.open{display:block}
-    .fab-menu a{display:block;text-decoration:none;color:#172033;padding:9px 12px;border-radius:12px;font-size:13px;font-weight:750}
+    .fab-menu.open{display:block;animation:fade .15s ease both}
+    .fab-menu a{display:flex;align-items:center;gap:8px;text-decoration:none;color:#172033;border-radius:15px;padding:10px 12px;font-size:13px;font-weight:850}
     .fab-menu a:hover{background:#f8fafc}
-    .fab-button{border:0;color:#fff;background:linear-gradient(135deg,var(--ayda),var(--ayda-2));border-radius:20px;padding:12px 14px;font-weight:850;box-shadow:0 14px 32px rgba(35,64,120,.32)}
+    .fab-button{border:0;color:#fff;background:linear-gradient(135deg,var(--ayda),var(--ayda-2));border-radius:22px;padding:13px 16px;font-weight:950;box-shadow:0 18px 38px rgba(35,64,120,.34)}
 
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-    @media(max-width:920px){
+    @media(max-width:1120px){
       .gate,.workspace{grid-template-columns:1fr}
-      .preview-grid,.quick-info{grid-template-columns:1fr}
-      .topbar{align-items:flex-start;flex-direction:column}
-      .status-pill{white-space:normal}
+      .sidebar-sticky{position:relative;top:0}
+      .resource-board{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
-    @media(max-width:560px){
-      .page{padding:10px}
-      .shell{border-radius:22px}
-      .topbar,.gate,.library{padding:14px}
-      .hero-card{padding:18px}
-      .login-box{grid-template-columns:1fr}
-      .primary-btn{width:100%}
-      .frame-wrap,iframe{height:auto;min-height:370px}
-      iframe{height:370px}
+
+    @media(max-width:760px){
+      .app{padding:10px}
+      .glass-shell{border-radius:28px;min-height:calc(100vh - 20px)}
+      .topbar{position:relative;align-items:flex-start;flex-direction:column;padding:15px}
+      .brand p{white-space:normal;max-width:none}
+      .top-actions{justify-content:flex-start;width:100%}
+      .status-pill,.mini-pill{white-space:normal}
+      .gate,.library{padding:13px}
+      .hero,.login-card,.feature-card,.panel,.viewer-panel{border-radius:26px}
+      .hero{padding:20px;min-height:auto}
+      .hero-grid,.feature-grid,.library-footer{grid-template-columns:1fr}
+      .level-grid{grid-template-columns:1fr 1fr}
+      .viewer-top{flex-direction:column}
+      .viewer-actions{justify-content:flex-start;width:100%}
+      .viewer-actions .soft-btn,.viewer-actions .ghost-btn{flex:1 1 auto}
+      .search-row{grid-template-columns:1fr}
+      .resource-board{grid-template-columns:1fr;max-height:310px}
+      .frame-shell{min-height:390px}
+      iframe{height:390px}
       .fab{left:12px;right:12px;align-items:stretch}
       .fab-button{width:100%}
+      .fab-menu{width:100%}
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <div class="shell">
+  <main class="app">
+    <div class="glass-shell">
       <header class="topbar">
         <div class="brand">
           <div class="logo">A</div>
-          <div>
+          <div class="brand-title">
             <h1>AYDA · Online Kütüphane</h1>
-            <p>Almanca ders materyalleri, tekrar videoları ve sınav hazırlık kaynakları</p>
+            <p>Seviyeye göre ders materyalleri, kayıtlar, sınav hazırlık ve online alıştırmalar</p>
           </div>
         </div>
-        <div class="status-pill" id="passwordStatus"><span class="dot warn" id="statusDot"></span><span id="statusText">Şifre sistemi yükleniyor...</span></div>
+        <div class="top-actions">
+          <div class="mini-pill">2027 Panel UI</div>
+          <div class="status-pill" id="passwordStatus"><span class="dot warn" id="statusDot"></span><span id="statusText">Şifre sistemi yükleniyor...</span></div>
+        </div>
       </header>
 
       <section class="gate" id="gateSection">
-        <div class="hero-card">
-          <div class="eyebrow">🔐 Merkezi şifre sistemi</div>
-          <h2>Sınıf kodunu gir, kaynaklara tek ekrandan ulaş.</h2>
-          <p class="lead">Bu sayfa artık şifreleri kodun içinden değil, <strong>ayda-pass</strong> deposundaki merkezi şifre dosyasından alır. Böylece yeni sınıf kodu eklemek için bu HTML dosyasını yeniden düzenlemen gerekmez.</p>
+        <section class="hero">
+          <div class="eyebrow">🔐 Merkezi sınıf kodu sistemi</div>
+          <h2>AYDA kaynakları artık tek ekranda, uygulama düzeninde.</h2>
+          <p class="lead">Sınıf kodunu giren öğrenci; seviyesine göre ders materyallerine, tekrar videolarına, sınav hazırlık klasörlerine ve online alıştırmalara aynı panelden ulaşır. Şifreler HTML içinde tutulmaz; <strong>ayda-pass</strong> üzerinden merkezi olarak çekilir.</p>
 
-          <form class="login-box" onsubmit="event.preventDefault(); unlockLibrary();">
-            <div class="field">
-              <label for="classCodeInput">Sınıf kodu</label>
-              <div class="input-wrap">
-                <span>🔑</span>
-                <input id="classCodeInput" type="password" placeholder="Sınıf kodunu yaz" autocomplete="off" />
-                <button class="eye-btn" type="button" onclick="togglePassword()" aria-label="Şifreyi göster/gizle">👁️</button>
+          <div class="hero-grid">
+            <div class="stat"><strong>A1–B2</strong><span>Seviyelere ayrılmış düzenli kaynak mimarisi</span></div>
+            <div class="stat"><strong>Akıllı</strong><span>Arama, kategori filtresi ve tek tıkla kaynak açma</span></div>
+            <div class="stat"><strong>Panel</strong><span>Drive, YouTube, Quizlet, Hueber ve DW bağlantıları</span></div>
+          </div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="login-card">
+            <h3>Kütüphaneye giriş</h3>
+            <p>Öğrencinin sınıf kodunu yazması yeterlidir. Kod doğruysa kaynak paneli otomatik açılır.</p>
+
+            <form class="login-form" onsubmit="event.preventDefault(); unlockLibrary();">
+              <div class="field">
+                <label for="classCodeInput">Sınıf kodu</label>
+                <div class="input-wrap">
+                  <span>🔑</span>
+                  <input id="classCodeInput" type="password" placeholder="Örn: 240226" autocomplete="off" />
+                  <button class="eye-btn" type="button" onclick="togglePassword()" aria-label="Şifreyi göster/gizle">👁️</button>
+                </div>
               </div>
+              <button id="loginBtn" class="primary-btn" type="submit" disabled>Giriş yap</button>
+            </form>
+
+            <div id="messageBox" class="message info show">Şifre listesi yükleniyor. İnternet bağlantısı veya GitHub Pages erişimi yoksa giriş geçici olarak yapılamaz.</div>
+          </section>
+
+          <section class="feature-card">
+            <h3>Öğrenci ne görür?</h3>
+            <p>Karmaşık klasör listesi yerine seviyeye ayrılmış, arama yapılabilir, mobil uyumlu ve sade bir kütüphane ekranı.</p>
+            <div class="feature-grid">
+              <div class="feature-item">📚<b>Ders</b><span>Kitap, PDF, Drive klasörleri</span></div>
+              <div class="feature-item">▶️<b>Video</b><span>Ders tekrarları ve anlatımlar</span></div>
+              <div class="feature-item">🎯<b>Sınav</b><span>TELC / Goethe hazırlık alanları</span></div>
+              <div class="feature-item">🌐<b>Online</b><span>Quizlet, Hueber, DW ve ek alıştırmalar</span></div>
             </div>
-            <button id="loginBtn" class="primary-btn" type="submit" disabled>Giriş yap</button>
-          </form>
-
-          <div id="messageBox" class="message info show">Şifre listesi yükleniyor. İnternet bağlantısı veya GitHub Pages erişimi yoksa giriş geçici olarak yapılamaz.</div>
-
-          <div class="quick-info">
-            <div class="mini-stat"><strong>A1–B2</strong><span>Seviyeye göre ayrılmış materyaller</span></div>
-            <div class="mini-stat"><strong>TELC</strong><span>Sınav hazırlık klasörleri ve alıştırmalar</span></div>
-            <div class="mini-stat"><strong>Tek panel</strong><span>Drive, YouTube, Quizlet ve online linkler</span></div>
-          </div>
-        </div>
-
-        <aside class="preview-card">
-          <h3>Kullanım mantığı</h3>
-          <p>Öğrenci sınıf kodunu girer. Kod doğruysa seviyeyi seçer, kategori filtresi veya arama ile ihtiyacı olan kaynağı açar.</p>
-          <div class="preview-grid">
-            <div class="preview-item">📚<b>Ders materyali</b><span>Kitap, PDF, Drive klasörleri</span></div>
-            <div class="preview-item">▶️<b>Ders tekrarları</b><span>Video kayıtları ve YouTube listeleri</span></div>
-            <div class="preview-item">🎯<b>Sınav hazırlık</b><span>A1, A2, B1, B2 sınav kaynakları</span></div>
-            <div class="preview-item">🌐<b>Online alıştırma</b><span>Quizlet, Hueber, DW ve ek çalışmalar</span></div>
-          </div>
+          </section>
         </aside>
       </section>
 
       <section class="library" id="librarySection">
         <div class="workspace">
-          <aside class="panel">
-            <div class="class-banner">
+          <aside class="panel sidebar-sticky">
+            <div class="class-card">
               <div>
                 <strong id="activeCodeLabel">Kütüphane açık</strong>
-                <span>Merkezi şifre sistemi ile giriş yapıldı.</span>
+                <span>Merkezi şifre sistemi ile güvenli giriş yapıldı.</span>
               </div>
-              <button class="logout-btn" onclick="logout()">Çıkış</button>
+              <button class="danger-btn" type="button" onclick="logout()">Çıkış</button>
             </div>
 
-            <div class="panel-title">Seviye seç</div>
-            <div class="btn-grid" id="levelButtons">
-              <button class="tab active" data-level="A1" onclick="selectLevel(event)">A1</button>
-              <button class="tab" data-level="A2" onclick="selectLevel(event)">A2</button>
-              <button class="tab" data-level="B1" onclick="selectLevel(event)">B1</button>
-              <button class="tab" data-level="B2" onclick="selectLevel(event)">B2</button>
+            <p class="section-label">Seviye</p>
+            <div class="level-grid" id="levelButtons">
+              <button class="tab active" data-level="A1" onclick="selectLevel(event)">📘 A1</button>
+              <button class="tab" data-level="A2" onclick="selectLevel(event)">📗 A2</button>
+              <button class="tab" data-level="B1" onclick="selectLevel(event)">📙 B1</button>
+              <button class="tab" data-level="B2" onclick="selectLevel(event)">📕 B2</button>
               <button class="tab" data-level="SINAV" onclick="selectLevel(event)">🎯 Sınav</button>
+              <button class="tab" data-level="TUMU" onclick="selectLevel(event)">🧭 Tümü</button>
             </div>
 
-            <div class="group">
-              <p class="group-label">Görünüm</p>
-              <div class="btn-grid">
-                <button class="tab active" data-mode="kategori" onclick="selectView(event)">🎛️ Kategori</button>
-                <button class="tab" data-mode="liste" onclick="selectView(event)">📋 Tam liste</button>
-              </div>
+            <p class="section-label">Kaynak tipi</p>
+            <div class="chip-wrap" id="tagButtons">
+              <button class="chip" data-tag="ders" onclick="toggleTag(event)">📚 Ders</button>
+              <button class="chip" data-tag="video" onclick="toggleTag(event)">▶️ Video</button>
+              <button class="chip" data-tag="ek" onclick="toggleTag(event)">🧩 Ek</button>
+              <button class="chip" data-tag="konu" onclick="toggleTag(event)">📌 Konu</button>
+              <button class="chip" data-tag="okuma" onclick="toggleTag(event)">📖 Okuma</button>
+              <button class="chip" data-tag="quizlet" onclick="toggleTag(event)">🔤 Quizlet</button>
+              <button class="chip" data-tag="online" onclick="toggleTag(event)">🌐 Online</button>
+              <button class="chip" data-tag="dinleme" onclick="toggleTag(event)">🎧 Dinleme</button>
+              <button class="chip" data-tag="muzik" onclick="toggleTag(event)">🎵 Müzik</button>
+              <button class="chip" data-tag="nicos" onclick="toggleTag(event)">🎬 Nicos Weg</button>
+              <button class="chip" data-tag="dergi" onclick="toggleTag(event)">📰 Dergi</button>
+              <button class="chip" data-tag="kitap" onclick="toggleTag(event)">📘 Kitap</button>
+              <button class="chip" data-tag="sinav" onclick="toggleTag(event)">🎯 Sınav</button>
             </div>
 
-            <details class="filter-box" id="filterDetails">
-              <summary>🔎 Kategorileri aç / kapat</summary>
-              <div class="group">
-                <div class="btn-grid" id="tagButtons">
-                  <button class="chip" data-tag="ders" onclick="toggleTag(event)">📚 Ders</button>
-                  <button class="chip" data-tag="video" onclick="toggleTag(event)">▶️ Video</button>
-                  <button class="chip" data-tag="ek" onclick="toggleTag(event)">🧩 Ek</button>
-                  <button class="chip" data-tag="konu" onclick="toggleTag(event)">📌 Konu</button>
-                  <button class="chip" data-tag="okuma" onclick="toggleTag(event)">📖 Okuma</button>
-                  <button class="chip" data-tag="quizlet" onclick="toggleTag(event)">🔤 Quizlet</button>
-                  <button class="chip" data-tag="online" onclick="toggleTag(event)">🌐 Online</button>
-                  <button class="chip" data-tag="dinleme" onclick="toggleTag(event)">🎧 Dinleme</button>
-                  <button class="chip" data-tag="muzik" onclick="toggleTag(event)">🎵 Müzik</button>
-                  <button class="chip" data-tag="nicos" onclick="toggleTag(event)">🎬 Nicos Weg</button>
-                  <button class="chip" data-tag="dergi" onclick="toggleTag(event)">📰 Dergi</button>
-                  <button class="chip" data-tag="kitap" onclick="toggleTag(event)">📘 Kitap</button>
-                  <button class="chip" data-tag="genel" onclick="toggleTag(event)">ℹ️ Genel</button>
-                  <button class="chip" data-tag="sinav" onclick="toggleTag(event)">🎯 Sınav</button>
-                </div>
-                <div class="filter-actions">
-                  <button class="soft-btn" type="button" onclick="applyFilters()">Uygula</button>
-                  <button class="ghost-btn" type="button" onclick="clearFilters()">Temizle</button>
-                </div>
-              </div>
-            </details>
+            <div class="sidebar-actions">
+              <button class="soft-btn" type="button" onclick="renderResources()">Filtrele</button>
+              <button class="ghost-btn" type="button" onclick="clearFilters()">Temizle</button>
+            </div>
           </aside>
 
-          <section class="panel">
-            <div class="viewer-head">
+          <section class="viewer-panel">
+            <div class="viewer-top">
               <div>
-                <h2 id="viewerTitle">A1 · Kategori</h2>
+                <h2 id="viewerTitle">A1 · Online Kütüphane</h2>
                 <p id="viewerMeta">Kaynaklar hazırlanıyor.</p>
               </div>
-              <a class="soft-btn" id="directLinkTop" href="#" target="_blank" rel="noopener" style="visibility:hidden">Yeni sekmede aç</a>
+              <div class="viewer-actions">
+                <a class="soft-btn" id="directLinkTop" href="#" target="_blank" rel="noopener" style="visibility:hidden">Yeni sekmede aç</a>
+                <button class="ghost-btn" type="button" onclick="copyCurrentLink()">Linki kopyala</button>
+              </div>
             </div>
 
-            <div class="tools">
-              <div class="search"><span>🔍</span><input id="searchInput" type="search" placeholder="Kaynak ara: Quizlet, Nicos Weg, okuma, sınav..." /></div>
+            <div class="search-row">
+              <div class="search">
+                <span>🔍</span>
+                <input id="searchInput" type="search" placeholder="Kaynak ara: sınav, Quizlet, Nicos Weg, video, okuma..." />
+              </div>
+              <button class="ghost-btn" type="button" onclick="clearSearch()">Aramayı sil</button>
             </div>
 
-            <div class="resource-list" id="resourceList"></div>
+            <div class="resource-board" id="resourceList"></div>
 
-            <div class="frame-wrap">
-              <iframe id="libraryFrame" src="about:blank" loading="lazy"></iframe>
+            <div class="frame-shell">
+              <iframe id="libraryFrame" src="about:blank" loading="lazy" title="AYDA kaynak görüntüleyici"></iframe>
               <div class="empty" id="emptyState">
                 <div class="empty-card">
-                  <b>Bu filtreye uygun kaynak bulunamadı.</b>
+                  <b>Bu seçime uygun kaynak bulunamadı.</b>
                   <p>Kategorileri temizleyebilir, arama kelimesini değiştirebilir veya farklı bir seviye seçebilirsin.</p>
                 </div>
               </div>
             </div>
 
             <div class="direct-row">
-              <span>Drive / Quizlet gibi bazı siteler iframe içinde açılmayabilir.</span>
-              <a id="directLinkBottom" href="#" target="_blank" rel="noopener" style="visibility:hidden">🔗 Açılmazsa yeni sekmede aç</a>
+              <span>Drive, Quizlet ve bazı siteler iframe içinde açılmayabilir. Böyle durumda yeni sekmede aç butonunu kullan.</span>
+              <a class="soft-btn" id="directLinkBottom" href="#" target="_blank" rel="noopener" style="visibility:hidden">🔗 Açılmazsa yeni sekmede aç</a>
+            </div>
+
+            <div class="library-footer">
+              <div class="footer-card"><b>Öğrenci notu</b>Kaynak açılmazsa aynı bağlantıyı yeni sekmede deneyiniz.</div>
+              <div class="footer-card"><b>Teknik not</b>Şifreler merkezi dosyadan çekildiği için yeni kod eklerken bu HTML dosyasını değiştirmen gerekmez.</div>
+              <div class="footer-card"><b>Destek</b>Aradığınız kaynak eksikse sağ alttaki yardım butonundan bildirebilirsiniz.</div>
             </div>
           </section>
         </div>
@@ -685,29 +829,13 @@
 
   <div class="fab" id="helpFab">
     <div class="fab-menu" id="fabMenu">
-      <a id="waLink" href="#" target="_blank" rel="noopener">WhatsApp ile ilet</a>
-      <a id="smsLink" href="#">SMS ile ilet</a>
+      <a id="waLink" href="#" target="_blank" rel="noopener">💬 WhatsApp ile ilet</a>
+      <a id="smsLink" href="#">📩 SMS ile ilet</a>
     </div>
     <button class="fab-button" type="button" onclick="toggleFab()">📩 Aradığım kaynağı bulamadım</button>
   </div>
 
   <script>
-    /* =========================================================
-      AYDA MERKEZİ ŞİFRE SİSTEMİ
-      Şifreler buradan çekilir:
-      https://onurqlp.github.io/ayda-pass/passwords.json
-
-      Desteklenen passwords.json formatları:
-      1) ["ayda1", "240226"]
-      2) { "passwords": ["ayda1", "240226"] }
-      3) { "codes": ["ayda1", "240226"] }
-      4) { "validCodes": ["ayda1", "240226"] }
-      5) { "active": ["ayda1"], "temporary": ["240226"] }
-      6) { "classes": { "A1": ["240226"], "A2": ["030626"] } }
-
-      access-control.js fallback olarak okunur ve içinden tırnaklı kodlar ayıklanır.
-    ========================================================= */
-
     const PASSWORD_ENDPOINTS = [
       "https://onurqlp.github.io/ayda-pass/passwords.json",
       "https://onurqlp.github.io/ayda-pass/access-control.js"
@@ -717,8 +845,19 @@
 
     let VALID_CODES = new Set();
     let passwordSourceLoaded = false;
+    let currentLevel = "A1";
+    let activeTags = new Set();
+    let searchQuery = "";
+    let currentResourceUrl = "";
 
-    const LEVEL_LABELS = { A1:"A1", A2:"A2", B1:"B1", B2:"B2", SINAV:"Sınav hazırlık" };
+    const LEVEL_LABELS = {
+      A1:"A1",
+      A2:"A2",
+      B1:"B1",
+      B2:"B2",
+      SINAV:"Sınav hazırlık",
+      TUMU:"Tüm kaynaklar"
+    };
 
     const CONTENT = {
       A1:[
@@ -802,30 +941,21 @@
       emptyState:document.getElementById("emptyState"),
       directLinkTop:document.getElementById("directLinkTop"),
       directLinkBottom:document.getElementById("directLinkBottom"),
-      filterDetails:document.getElementById("filterDetails"),
       fabMenu:document.getElementById("fabMenu")
     };
 
-    let currentLevel = "A1";
-    let viewMode = "kategori";
-    let activeTags = new Set();
-    let searchQuery = "";
-
     function normalizeCode(code){ return String(code || "").trim().toLowerCase(); }
 
-    function collectCodesFromAny(input, bucket = []){
+    function collectCodesFromAny(input,bucket=[]){
       if(!input) return bucket;
-
       if(Array.isArray(input)){
         input.forEach(item => collectCodesFromAny(item,bucket));
         return bucket;
       }
-
       if(typeof input === "object"){
         Object.values(input).forEach(value => collectCodesFromAny(value,bucket));
         return bucket;
       }
-
       if(typeof input === "string" || typeof input === "number"){
         const code = normalizeCode(input);
         if(code && /^[a-z0-9ğüşıöç._-]{2,40}$/i.test(code)) bucket.push(code);
@@ -843,11 +973,11 @@
       return found;
     }
 
-    async function fetchWithTimeout(url, ms = 7000){
+    async function fetchWithTimeout(url,ms=7000){
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), ms);
+      const timer = setTimeout(() => controller.abort(),ms);
       try{
-        const res = await fetch(url + "?v=" + Date.now(), { cache:"no-store", signal:controller.signal });
+        const res = await fetch(url + "?v=" + Date.now(),{cache:"no-store",signal:controller.signal});
         if(!res.ok) throw new Error("HTTP " + res.status);
         return await res.text();
       }finally{
@@ -867,14 +997,11 @@
         try{
           const text = await fetchWithTimeout(url);
           let codes = [];
-
           if(url.endsWith(".json")){
-            const data = JSON.parse(text);
-            codes = collectCodesFromAny(data);
+            codes = collectCodesFromAny(JSON.parse(text));
           }else{
             codes = parseJsCodes(text);
           }
-
           codes.forEach(code => loaded.push(code));
         }catch(err){
           errors.push(url + " → " + err.message);
@@ -882,18 +1009,17 @@
       }
 
       EMERGENCY_LOCAL_CODES.forEach(code => loaded.push(normalizeCode(code)));
-
       VALID_CODES = new Set(loaded.filter(Boolean));
       passwordSourceLoaded = VALID_CODES.size > 0;
 
       if(passwordSourceLoaded){
-        setStatus("ok", VALID_CODES.size + " aktif kod yüklendi");
+        setStatus("ok",VALID_CODES.size + " aktif kod yüklendi");
         els.loginBtn.disabled = false;
         showMessage("info","Şifre sistemi hazır. Sınıf kodunu girerek kütüphaneye giriş yapabilirsin.");
       }else{
         setStatus("bad","Şifre listesi alınamadı");
         els.loginBtn.disabled = true;
-        showMessage("error","Şifre dosyası okunamadı. ayda-pass deposunda passwords.json dosyasının public olduğundan ve GitHub Pages ile yayınlandığından emin ol. Denenen kaynaklar: " + errors.join(" | "));
+        showMessage("error","Şifre dosyası okunamadı. ayda-pass deposunda passwords.json dosyasının public olduğundan emin ol. Denenen kaynaklar: " + errors.join(" | "));
       }
     }
 
@@ -913,7 +1039,6 @@
 
     function unlockLibrary(){
       const code = normalizeCode(els.classCodeInput.value);
-
       if(!passwordSourceLoaded){
         showMessage("error","Şifre listesi henüz yüklenmedi. Sayfayı yenileyip tekrar dene.");
         return;
@@ -926,7 +1051,6 @@
         showMessage("error","Kod hatalı görünüyor. Sınıf öğretmeninden aldığın kodu kontrol ederek tekrar dene.");
         return;
       }
-
       sessionStorage.setItem("aydaLibraryUnlocked","1");
       sessionStorage.setItem("aydaLibraryCode",code);
       openLibrary(code);
@@ -937,7 +1061,6 @@
       els.librarySection.classList.add("open");
       els.activeCodeLabel.textContent = "Kod: " + maskCode(code || "aktif");
       currentLevel = "A1";
-      viewMode = "kategori";
       activeTags.clear();
       searchQuery = "";
       els.searchInput.value = "";
@@ -952,22 +1075,19 @@
       els.gateSection.style.display = "grid";
       els.classCodeInput.value = "";
       els.libraryFrame.src = "about:blank";
+      currentResourceUrl = "";
+      setDirectLink("");
       showMessage("info","Çıkış yapıldı. Tekrar giriş için sınıf kodunu yazabilirsin.");
     }
 
     function maskCode(code){
+      code = String(code || "");
       if(code.length <= 4) return "••" + code.slice(-1);
       return code.slice(0,2) + "••••" + code.slice(-2);
     }
 
     function selectLevel(event){
       currentLevel = event.currentTarget.dataset.level;
-      syncButtons();
-      renderResources();
-    }
-
-    function selectView(event){
-      viewMode = event.currentTarget.dataset.mode;
       syncButtons();
       renderResources();
     }
@@ -979,11 +1099,6 @@
       syncButtons();
     }
 
-    function applyFilters(){
-      renderResources();
-      els.filterDetails.open = false;
-    }
-
     function clearFilters(){
       activeTags.clear();
       searchQuery = "";
@@ -992,36 +1107,50 @@
       renderResources();
     }
 
+    function clearSearch(){
+      searchQuery = "";
+      els.searchInput.value = "";
+      renderResources();
+    }
+
     function syncButtons(){
       document.querySelectorAll("[data-level]").forEach(btn => btn.classList.toggle("active",btn.dataset.level === currentLevel));
-      document.querySelectorAll("[data-mode]").forEach(btn => btn.classList.toggle("active",btn.dataset.mode === viewMode));
       document.querySelectorAll("[data-tag]").forEach(btn => btn.classList.toggle("active",activeTags.has(btn.dataset.tag)));
     }
 
+    function allContent(){
+      return Object.entries(CONTENT).flatMap(([level,items]) => items.map(item => ({...item,level})));
+    }
+
     function getResources(){
-      let list = CONTENT[currentLevel] || [];
-      if(viewMode === "kategori" && activeTags.size){
+      let list = currentLevel === "TUMU" ? allContent() : (CONTENT[currentLevel] || []).map(item => ({...item,level:currentLevel}));
+      if(activeTags.size){
         list = list.filter(item => (item.tags || []).some(tag => activeTags.has(tag)));
       }
       if(searchQuery){
         const q = searchQuery.toLowerCase();
-        list = list.filter(item => item.label.toLowerCase().includes(q) || (item.tags || []).join(" ").toLowerCase().includes(q));
+        list = list.filter(item =>
+          item.label.toLowerCase().includes(q) ||
+          String(item.level || "").toLowerCase().includes(q) ||
+          (item.tags || []).join(" ").toLowerCase().includes(q)
+        );
       }
       return list;
     }
 
     function renderResources(){
       const resources = getResources();
-      const modeLabel = viewMode === "liste" ? "Tam liste" : "Kategori";
-      els.viewerTitle.textContent = (LEVEL_LABELS[currentLevel] || currentLevel) + " · " + modeLabel;
+      const activeFilterText = activeTags.size ? " · " + Array.from(activeTags).join(", ") : "";
+      els.viewerTitle.textContent = (LEVEL_LABELS[currentLevel] || currentLevel) + " · Online Kütüphane";
       els.viewerMeta.textContent = resources.length
-        ? resources.length + " kaynak listeleniyor. Kaynağa tıklayınca aşağıda açılır."
+        ? resources.length + " kaynak listeleniyor" + activeFilterText + ". Kaynak kartına tıklayınca aşağıda açılır."
         : "Bu seçimde kaynak bulunamadı.";
 
       els.resourceList.innerHTML = "";
 
       if(!resources.length){
         els.libraryFrame.src = "about:blank";
+        currentResourceUrl = "";
         els.emptyState.classList.add("show");
         setDirectLink("");
         return;
@@ -1031,24 +1160,30 @@
       resources.forEach((res,index) => {
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "resource-chip" + (index === 0 ? " active" : "");
-        btn.textContent = res.label;
+        btn.className = "resource-card-btn" + (index === 0 ? " active" : "");
+        const tags = (res.tags || []).slice(0,3).map(tag => `<span class="tag-mini">${tag}</span>`).join("");
+        btn.innerHTML = `<span class="resource-title">${currentLevel === "TUMU" ? `<small>${res.level}</small><br>` : ""}${escapeHtml(res.label)}</span><span class="resource-tags">${tags}</span>`;
         btn.onclick = () => openResource(res,btn);
         els.resourceList.appendChild(btn);
       });
 
-      openResource(resources[0], els.resourceList.querySelector(".resource-chip"));
+      openResource(resources[0],els.resourceList.querySelector(".resource-card-btn"));
+    }
+
+    function escapeHtml(text){
+      return String(text).replace(/[&<>'"]/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[char]));
     }
 
     function openResource(resource,button){
-      document.querySelectorAll(".resource-chip").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".resource-card-btn").forEach(btn => btn.classList.remove("active"));
       if(button) button.classList.add("active");
+      currentResourceUrl = resource.url;
       els.libraryFrame.src = resource.url;
       setDirectLink(resource.url);
     }
 
     function setDirectLink(url){
-      [els.directLinkTop, els.directLinkBottom].forEach(link => {
+      [els.directLinkTop,els.directLinkBottom].forEach(link => {
         if(!url){
           link.href = "#";
           link.style.visibility = "hidden";
@@ -1059,14 +1194,29 @@
       });
     }
 
-    els.searchInput.addEventListener("input", function(){
+    async function copyCurrentLink(){
+      if(!currentResourceUrl){
+        alert("Kopyalanacak aktif kaynak yok.");
+        return;
+      }
+      try{
+        await navigator.clipboard.writeText(currentResourceUrl);
+        alert("Kaynak linki kopyalandı.");
+      }catch(err){
+        prompt("Linki kopyalayabilirsin:",currentResourceUrl);
+      }
+    }
+
+    els.searchInput.addEventListener("input",function(){
       searchQuery = this.value.trim().toLowerCase();
       renderResources();
     });
 
-    function toggleFab(){ els.fabMenu.classList.toggle("open"); }
+    function toggleFab(){
+      els.fabMenu.classList.toggle("open");
+    }
 
-    document.addEventListener("click", function(e){
+    document.addEventListener("click",function(e){
       const fab = document.getElementById("helpFab");
       if(fab && !fab.contains(e.target)) els.fabMenu.classList.remove("open");
     });
@@ -1078,10 +1228,9 @@
       document.getElementById("smsLink").href = `sms:+${number}?&body=${text}`;
     }
 
-    document.addEventListener("DOMContentLoaded", async function(){
+    document.addEventListener("DOMContentLoaded",async function(){
       setupContactLinks();
       await loadPasswords();
-
       const alreadyUnlocked = sessionStorage.getItem("aydaLibraryUnlocked") === "1";
       const code = sessionStorage.getItem("aydaLibraryCode") || "aktif";
       if(alreadyUnlocked && passwordSourceLoaded){
