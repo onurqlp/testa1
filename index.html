@@ -1,101 +1,1377 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AYDA A1 Çalışma</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#234078" />
+
+  <title>AYDA TELC Sınav Hazırlık Platformu</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    body {
+    :root {
+      --ayda-blue: #234078;
+      --ayda-blue-dark: #172b52;
+      --ayda-blue-light: #315992;
+      --ayda-gold: #d8a84f;
+      --white: #ffffff;
+      --text-main: #14213d;
+      --text-muted: #667085;
+      --soft-bg: #f6f8fc;
+      --border: rgba(35, 64, 120, 0.14);
+      --glass: rgba(255,255,255,0.13);
+      --glass-border: rgba(255,255,255,0.23);
+      --shadow-card: 0 18px 45px rgba(21, 42, 84, 0.18);
+      --shadow-soft: 0 20px 55px rgba(21, 42, 84, 0.16);
+      --green: #25D366;
+      --danger: #b42318;
+    }
+
+    * {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      color: #172033;
-    }
-    .box {
-      max-width: 520px;
-      margin: 40px auto;
-      padding: 24px;
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
-    }
-    h1, h2 { color: #234078; }
-    input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ccd6e0;
-      border-radius: 12px;
-      font-size: 16px;
+      padding: 0;
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(216, 168, 79, 0.24) 0, transparent 26%),
+        radial-gradient(circle at 86% 16%, rgba(255, 255, 255, 0.16) 0, transparent 28%),
+        radial-gradient(circle at 50% 105%, rgba(216, 168, 79, 0.18) 0, transparent 30%),
+        linear-gradient(135deg, var(--ayda-blue-dark) 0%, var(--ayda-blue) 58%, var(--ayda-blue-light) 100%);
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.78), transparent 88%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 460px;
+      height: 460px;
+      right: -210px;
+      bottom: -210px;
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      filter: blur(4px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: rgba(255,255,255,0.95);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      backdrop-filter: blur(14px);
+      text-decoration: none;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(216,168,79,0.18);
+      color: var(--ayda-gold);
+      border: 1px solid rgba(216,168,79,0.28);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand-text strong {
+      font-size: 13px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .brand-text span {
+      font-size: 11px;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 13px;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+    }
+
+    .top-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+    }
+
+    .hero {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 62px 0 32px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 15px;
+      margin-bottom: 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.24);
+      color: rgba(255,255,255,0.9);
+      font-size: 13px;
+      font-weight: 700;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+      animation: fadeInDown 0.7s ease both;
+    }
+
+    .hero-badge i {
+      color: var(--ayda-gold);
+    }
+
+    .hero h1 {
+      color: var(--white);
+      max-width: 930px;
+      margin: 0 auto 18px;
+      font-size: clamp(2.4rem, 6vw, 5.35rem);
+      line-height: 1.02;
+      letter-spacing: -2px;
+      font-weight: 800;
+      text-shadow: 0 16px 42px rgba(0,0,0,0.25);
+      animation: fadeInDown 0.8s ease 0.05s both;
+    }
+
+    .hero h1 span {
+      color: var(--ayda-gold);
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      color: rgba(255,255,255,0.86);
+      font-size: clamp(1rem, 2.1vw, 1.22rem);
+      line-height: 1.75;
+      animation: fadeInUp 0.8s ease 0.12s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .primary-cta,
+    .secondary-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      transition: all 0.25s ease;
+    }
+
+    .primary-cta {
+      background: var(--green);
+      color: #fff;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.22);
+    }
+
+    .primary-cta:hover {
+      transform: translateY(-3px);
+      background: #1fb95a;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+    }
+
+    .secondary-cta {
+      background: rgba(255,255,255,0.13);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.24);
+      backdrop-filter: blur(14px);
+    }
+
+    .secondary-cta:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.22);
+    }
+
+    .level-section {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 34px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 24px;
+      color: #fff;
+    }
+
+    .section-title h2 {
+      font-size: clamp(1.55rem, 3vw, 2.25rem);
+      line-height: 1.2;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-title p {
+      color: rgba(255,255,255,0.76);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .level-card {
+      min-height: 290px;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      border-radius: 30px;
+      text-decoration: none;
+      color: var(--text-main);
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(255,255,255,0.72);
+      box-shadow: var(--shadow-card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+      animation: fadeInUp 0.75s ease both;
+      cursor: pointer;
+    }
+
+    .level-card:nth-child(1) { animation-delay: 0.08s; }
+    .level-card:nth-child(2) { animation-delay: 0.14s; }
+    .level-card:nth-child(3) { animation-delay: 0.20s; }
+    .level-card:nth-child(4) { animation-delay: 0.26s; }
+
+    .level-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(216,168,79,0.22), transparent 34%),
+        linear-gradient(135deg, #fff, #f7f9fd 54%, #eef3fb);
+      transition: opacity 0.25s ease;
+    }
+
+    .level-card::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      right: -42px;
+      bottom: -42px;
+      border-radius: 999px;
+      background: rgba(35,64,120,0.07);
+      z-index: -1;
+      transition: transform 0.28s ease, background 0.28s ease;
+    }
+
+    .level-card:hover {
+      transform: translateY(-9px);
+      box-shadow: 0 28px 65px rgba(8, 24, 58, 0.28);
+      border-color: rgba(216,168,79,0.58);
+    }
+
+    .level-card:hover::after {
+      transform: scale(1.35);
+      background: rgba(216,168,79,0.16);
+    }
+
+    .level-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .level-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 86px;
+      height: 86px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--ayda-blue), var(--ayda-blue-light));
+      color: #fff;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      box-shadow: 0 16px 34px rgba(35,64,120,0.24);
+    }
+
+    .level-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(216,168,79,0.16);
+      border: 1px solid rgba(216,168,79,0.25);
+      color: var(--ayda-gold);
+      font-size: 17px;
+    }
+
+    .level-body {
+      margin-top: 20px;
+    }
+
+    .level-body h3 {
+      font-size: 21px;
+      line-height: 1.25;
+      margin-bottom: 9px;
+      color: var(--text-main);
+    }
+
+    .level-body p {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+
+    .level-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(35,64,120,0.075);
+      border: 1px solid rgba(35,64,120,0.10);
+      color: var(--ayda-blue);
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .level-footer {
+      margin-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--ayda-blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .enter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(35,64,120,0.08);
+      border: 1px solid rgba(35,64,120,0.10);
+      transition: all 0.25s ease;
+    }
+
+    .level-card:hover .enter-pill {
+      background: rgba(216,168,79,0.18);
+      border-color: rgba(216,168,79,0.32);
+    }
+
+    .features {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 42px;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .feature-panel,
+    .contact-panel {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(255,255,255,0.74);
+      border-radius: 30px;
+      padding: 28px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-panel::before,
+    .contact-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(216,168,79,0.16), transparent 34%),
+        linear-gradient(90deg, rgba(35,64,120,0.035), transparent);
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+    }
+
+    .feature-panel h2,
+    .contact-panel h2 {
+      font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+      color: var(--text-main);
+      margin-bottom: 12px;
+      letter-spacing: -0.4px;
+    }
+
+    .feature-panel p,
+    .contact-panel p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.75;
+      margin-bottom: 18px;
+    }
+
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 13px;
+      border-radius: 18px;
+      background: rgba(35,64,120,0.055);
+      border: 1px solid rgba(35,64,120,0.08);
+      color: var(--text-main);
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .feature-list i {
+      color: var(--ayda-gold);
+      margin-top: 3px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .contact-button {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(35,64,120,0.07);
+      border: 1px solid rgba(35,64,120,0.10);
+      color: var(--ayda-blue);
+      font-size: 14px;
+      font-weight: 800;
+      transition: all 0.25s ease;
+    }
+
+    .contact-button span {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .contact-button:hover {
+      transform: translateY(-2px);
+      background: rgba(216,168,79,0.16);
+      border-color: rgba(216,168,79,0.30);
+    }
+
+    .contact-button.whatsapp {
+      background: var(--green);
+      color: #fff;
+      border-color: rgba(37,211,102,0.42);
+      box-shadow: 0 12px 28px rgba(37,211,102,0.20);
+    }
+
+    .contact-button.whatsapp:hover {
+      background: #1fb95a;
+    }
+
+    .footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: auto auto 0;
+      padding: 24px 0 34px;
+      color: rgba(255,255,255,0.72);
+      border-top: 1px solid rgba(255,255,255,0.16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .footer-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+    }
+
+    .floating-whatsapp {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 50;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 17px;
+      border-radius: 999px;
+      background: var(--green);
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: 0 14px 34px rgba(0,0,0,0.24);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .floating-whatsapp:hover {
+      transform: translateY(-3px);
+      background: #1fb95a;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+    }
+
+    /* Şifre Modal */
+    .password-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(9, 18, 38, 0.72);
+      backdrop-filter: blur(10px);
+    }
+
+    .password-modal.active {
+      display: flex;
+    }
+
+    .password-card {
+      width: 100%;
+      max-width: 430px;
+      background: rgba(255,255,255,0.97);
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: 30px;
+      padding: 30px 24px;
+      box-shadow: 0 28px 70px rgba(0,0,0,0.28);
+      text-align: center;
+      animation: fadeInUp 0.25s ease both;
+      position: relative;
+    }
+
+    .password-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(35,64,120,0.08);
+      color: var(--ayda-blue);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .password-card-icon {
+      width: 54px;
+      height: 54px;
+      margin: 0 auto 16px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(35,64,120,0.08);
+      color: var(--ayda-blue);
+      font-size: 22px;
+    }
+
+    .password-card h2 {
+      font-size: 23px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .password-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .password-level {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: rgba(216,168,79,0.16);
+      border: 1px solid rgba(216,168,79,0.28);
+      color: var(--ayda-blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .password-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
       margin-bottom: 12px;
     }
-    button, .btn {
-      display: block;
+
+    .password-row input {
+      flex: 1;
       width: 100%;
-      padding: 14px;
-      background: #234078;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      margin: 10px 0;
-    }
-    .card {
-      padding: 16px;
+      height: 48px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 0 15px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 15px;
+      outline: none;
       background: #f8fafc;
-      border: 1px solid #e1e7ef;
-      border-radius: 14px;
-      margin: 12px 0;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
-    .msg {
-      color: #b00020;
-      font-weight: bold;
-      text-align: center;
+
+    .password-row input:focus {
+      border-color: rgba(35,64,120,0.55);
+      box-shadow: 0 0 0 4px rgba(35,64,120,0.10);
+      background: #fff;
+    }
+
+    .password-row button {
+      height: 48px;
+      border: 0;
+      border-radius: 16px;
+      padding: 0 18px;
+      background: var(--ayda-blue);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .password-row button:hover {
+      transform: translateY(-1px);
+      background: var(--ayda-blue-dark);
+      box-shadow: 0 10px 24px rgba(35,64,120,0.24);
+    }
+
+    .password-error {
+      display: none;
+      color: var(--danger);
+      background: #fff1f0;
+      border: 1px solid rgba(180,35,24,0.14);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 10px;
+    }
+
+    .password-error.active {
+      display: block;
+    }
+
+    .password-note {
+      color: var(--text-muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-22px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(26px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .level-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        padding-top: 18px;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .top-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        padding: 42px 0 26px;
+      }
+
+      .hero h1 {
+        letter-spacing: -1.2px;
+      }
+
+      .level-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .level-card {
+        min-height: 245px;
+        border-radius: 24px;
+        padding: 22px;
+      }
+
+      .level-label {
+        width: 76px;
+        height: 76px;
+        min-width: 76px;
+        border-radius: 22px;
+        font-size: 30px;
+      }
+
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-panel,
+      .contact-panel {
+        border-radius: 24px;
+        padding: 22px;
+      }
+
+      .footer {
+        text-align: center;
+        justify-content: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+
+      .floating-whatsapp {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        justify-content: center;
+      }
+
+      body {
+        padding-bottom: 72px;
+      }
+
+      .password-row {
+        flex-direction: column;
+      }
+
+      .password-row button {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .top-link {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .hero-actions a {
+        width: 100%;
+      }
+
+      .level-top {
+        align-items: center;
+      }
+
+      .level-card {
+        min-height: 230px;
+      }
     }
   </style>
 </head>
+
 <body>
+  <div class="page">
 
-  <div id="aydaLoginBox" class="box">
-    <h1>AYDA A1 Çalışma Alanı</h1>
-    <p>Devam etmek için sınıf kodunuzu giriniz.</p>
+    <header class="topbar">
+      <a href="https://www.aydadil.com" target="_blank" rel="noopener" class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div class="brand-text">
+          <strong>AYDA Dil Akademisi</strong>
+          <span>TELC • Goethe • Online Almanca</span>
+        </div>
+      </a>
 
-    <input id="aydaPasswordInput" placeholder="Sınıf kodu">
-    <button onclick="aydaCheckPassword()">Giriş Yap</button>
+      <div class="top-actions">
+        <a href="https://www.aydadil.com" target="_blank" rel="noopener" class="top-link">
+          <i class="fa-solid fa-globe"></i>
+          Web Sitesi
+        </a>
+        <a href="https://www.instagram.com/ayda.dil/" target="_blank" rel="noopener" class="top-link">
+          <i class="fa-brands fa-instagram"></i>
+          Instagram
+        </a>
+      </div>
+    </header>
 
-    <p id="aydaLoginMessage" class="msg"></p>
+    <main>
+      <section class="hero">
+        <div class="hero-badge">
+          <i class="fa-solid fa-certificate"></i>
+          AYDA TELC Sınav Hazırlık Platformu
+        </div>
+
+        <h1>
+          Almanca sınav hazırlığını <span>seviyene göre</span> başlat.
+        </h1>
+
+        <p>
+          A1’den B2’ye kadar TELC ve Goethe sınavlarına yönelik hazırlanmış çalışma alanlarına buradan ulaşabilirsiniz.
+          Seviyenizi seçin, size verilen şifreyi girin ve ilgili hazırlık platformuna geçin.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#seviyeler" class="secondary-cta">
+            <i class="fa-solid fa-layer-group"></i>
+            Seviyeleri Gör
+          </a>
+
+          <a href="https://wa.me/905409122503" target="_blank" rel="noopener" class="primary-cta">
+            <i class="fa-brands fa-whatsapp"></i>
+            Sorunuz varsa bize ulaşın
+          </a>
+        </div>
+      </section>
+
+      <section class="level-section" id="seviyeler">
+        <div class="section-title">
+          <h2>Seviyeni seç, hazırlığa başla</h2>
+          <p>Her seviye için şifre doğrulamasından sonra ilgili çalışma platformuna yönlendirilirsiniz.</p>
+        </div>
+
+        <div class="level-grid">
+
+          <a href="#" class="level-card" onclick="openPasswordModal('A1 Goethe / TELC Hazırlık', 'https://onurqlp.github.io/A1hazirlik/'); return false;">
+            <div>
+              <div class="level-top">
+                <div class="level-label">A1</div>
+                <div class="level-icon">
+                  <i class="fa-solid fa-seedling"></i>
+                </div>
+              </div>
+
+              <div class="level-body">
+                <h3>A1 Goethe / TELC Hazırlık</h3>
+                <p>
+                  Temel Almanca seviyesi için başlangıç odaklı sınav hazırlık alanı.
+                  Kelime, yapı, temel okuma ve sınav pratiği için uygundur.
+                </p>
+
+                <div class="level-tags">
+                  <span class="tag"><i class="fa-solid fa-check"></i> Başlangıç</span>
+                  <span class="tag"><i class="fa-solid fa-check"></i> Goethe/TELC</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-footer">
+              <span>Şifre ile giriş</span>
+              <span class="enter-pill">
+                Başla <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>
+
+          <a href="#" class="level-card" onclick="openPasswordModal('A2 TELC Hazırlık', 'https://onurqlp.github.io/telca2kelimelerr/'); return false;">
+            <div>
+              <div class="level-top">
+                <div class="level-label">A2</div>
+                <div class="level-icon">
+                  <i class="fa-solid fa-book-open-reader"></i>
+                </div>
+              </div>
+
+              <div class="level-body">
+                <h3>A2 TELC Hazırlık</h3>
+                <p>
+                  TELC A2 sınavına yönelik kelime, okuma, yazma ve konuşma hazırlıkları için düzenlenmiş çalışma alanı.
+                </p>
+
+                <div class="level-tags">
+                  <span class="tag"><i class="fa-solid fa-check"></i> A2 Sınav</span>
+                  <span class="tag"><i class="fa-solid fa-check"></i> Kelime</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-footer">
+              <span>Şifre ile giriş</span>
+              <span class="enter-pill">
+                Başla <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>
+
+          <a href="#" class="level-card" onclick="openPasswordModal('B1 TELC Hazırlık', 'https://onurqlp.github.io/telchazirlik/'); return false;">
+            <div>
+              <div class="level-top">
+                <div class="level-label">B1</div>
+                <div class="level-icon">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+              </div>
+
+              <div class="level-body">
+                <h3>B1 TELC Hazırlık</h3>
+                <p>
+                  Lesen, Sprachbausteine ve Hören bölümleri için hazırlanmış B1 sınav çalışma platformuna geçiş.
+                </p>
+
+                <div class="level-tags">
+                  <span class="tag"><i class="fa-solid fa-check"></i> Lesen</span>
+                  <span class="tag"><i class="fa-solid fa-check"></i> Hören</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-footer">
+              <span>Şifre ile giriş</span>
+              <span class="enter-pill">
+                Başla <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>
+
+          <a href="#" class="level-card" onclick="openPasswordModal('B2 TELC Hazırlık', 'https://onurqlp.github.io/telchazirlik/'); return false;">
+            <div>
+              <div class="level-top">
+                <div class="level-label">B2</div>
+                <div class="level-icon">
+                  <i class="fa-solid fa-medal"></i>
+                </div>
+              </div>
+
+              <div class="level-body">
+                <h3>B2 TELC Hazırlık</h3>
+                <p>
+                  B2 seviyesinde okuma, dinleme, dil bilgisi, yazma ve konuşma çalışmaları için kapsamlı hazırlık alanı.
+                </p>
+
+                <div class="level-tags">
+                  <span class="tag"><i class="fa-solid fa-check"></i> B2 Format</span>
+                  <span class="tag"><i class="fa-solid fa-check"></i> Schreiben</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="level-footer">
+              <span>Şifre ile giriş</span>
+              <span class="enter-pill">
+                Başla <i class="fa-solid fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <section class="features">
+        <div class="feature-panel">
+          <div class="panel-inner">
+            <h2>AYDA sınav hazırlık yaklaşımı</h2>
+            <p>
+              Bu sayfa, öğrencilerin seviyesine uygun çalışma alanına hızlı geçmesi için hazırlanmıştır.
+              Amaç sadece konu çalışmak değil; sınav mantığını, soru tiplerini ve doğru çalışma sırasını daha görünür hale getirmektir.
+            </p>
+
+            <ul class="feature-list">
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Seviyeye göre ayrılmış net çalışma alanları</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>TELC ve Goethe formatına uygun sınav hazırlığı</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Online Almanca eğitimleriyle desteklenebilir yapı</span>
+              </li>
+              <li>
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Öğrenciler için sade, hızlı ve mobil uyumlu erişim</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="contact-panel">
+          <div class="panel-inner">
+            <h2>Sorunuz mu var?</h2>
+            <p>
+              Hangi seviyeden başlamanız gerektiğini, TELC/Goethe sınav sürecini veya online Almanca eğitimlerini öğrenmek için AYDA ekibiyle iletişime geçebilirsiniz.
+            </p>
+
+            <div class="contact-buttons">
+              <a href="https://wa.me/905409122503" target="_blank" rel="noopener" class="contact-button whatsapp">
+                <span>
+                  <i class="fa-brands fa-whatsapp"></i>
+                  WhatsApp ile Ulaş
+                </span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+
+              <a href="https://www.aydadil.com" target="_blank" rel="noopener" class="contact-button">
+                <span>
+                  <i class="fa-solid fa-globe"></i>
+                  www.aydadil.com
+                </span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+
+              <a href="https://www.instagram.com/ayda.dil/" target="_blank" rel="noopener" class="contact-button">
+                <span>
+                  <i class="fa-brands fa-instagram"></i>
+                  @ayda.dil
+                </span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <a href="https://wa.me/905409122503" target="_blank" rel="noopener" class="floating-whatsapp">
+      <i class="fa-brands fa-whatsapp"></i>
+      Sorunuz varsa bize ulaşın
+    </a>
+
+    <footer class="footer">
+      <div class="footer-left">
+        <strong>© 2026 AYDA Dil Akademisi</strong>
+        <br>
+        TELC • Goethe • Online Almanca Sınav Hazırlığı
+      </div>
+
+      <div class="footer-links">
+        <a href="https://www.aydadil.com" target="_blank" rel="noopener">www.aydadil.com</a>
+        <a href="https://www.instagram.com/ayda.dil/" target="_blank" rel="noopener">@ayda.dil</a>
+        <a href="https://wa.me/905409122503" target="_blank" rel="noopener">0540 912 25 03</a>
+      </div>
+    </footer>
+
   </div>
 
-  <div id="aydaProtectedContent" style="display:none;">
-    <div class="box">
-      <h1>A1 Çalışma Sitesi</h1>
-      <p>Bu alan sadece doğru sınıf kodu girilince görünür.</p>
+  <!-- Şifre Modal -->
+  <div class="password-modal" id="passwordModal">
+    <div class="password-card">
+      <button class="password-close" type="button" onclick="closePasswordModal()">×</button>
 
-      <div class="card">
-        <h2>1. Kelime Kartları</h2>
-        <p><b>der Name</b> = isim</p>
-        <p><b>die Stadt</b> = şehir</p>
-        <p><b>das Land</b> = ülke</p>
+      <div class="password-card-icon">
+        <i class="fa-solid fa-lock"></i>
       </div>
 
-      <div class="card">
-        <h2>2. Mini Test</h2>
-        <p><b>Ich ___ Onur.</b></p>
-        <button onclick="alert('Doğru cevap: bin')">Cevabı Göster</button>
+      <div class="password-level" id="modalLevelName">AYDA Hazırlık</div>
+
+      <h2>Giriş Şifresi</h2>
+      <p>Devam etmek için size verilen AYDA giriş şifresini yazınız.</p>
+
+      <div class="password-row">
+        <input type="password" id="passwordInput" placeholder="Şifre" autocomplete="current-password">
+        <button type="button" onclick="checkPassword()">Giriş</button>
       </div>
 
-      <div class="card">
-        <h2>3. Ders Linkleri</h2>
-        <a class="btn" href="https://www.aydadil.com/" target="_blank">AYDA Web Sitesi</a>
+      <div class="password-error" id="passwordError">
+        Şifre hatalı. Lütfen tekrar deneyiniz.
+      </div>
+
+      <div class="password-note">
+        Şifrenizi bilmiyorsanız AYDA ekibiyle WhatsApp üzerinden iletişime geçebilirsiniz.
       </div>
     </div>
   </div>
 
-  <script src="https://onurqlp.github.io/ayda-pass/access-control.js"></script>
+  <script>
+    const AYDA_PASSWORD_URL = "https://onurqlp.github.io/ayda-pass/passwords.json";
 
+    const trFold = s => s.toLocaleLowerCase('tr-TR')
+      .replace(/ı/g,'i')
+      .replace(/ö/g,'o')
+      .replace(/ü/g,'u')
+      .replace(/ş/g,'s')
+      .replace(/ç/g,'c')
+      .replace(/ğ/g,'g');
+
+    let targetUrl = "";
+    let targetLevelName = "";
+
+    const passwordModal = document.getElementById("passwordModal");
+    const passwordInput = document.getElementById("passwordInput");
+    const passwordError = document.getElementById("passwordError");
+    const modalLevelName = document.getElementById("modalLevelName");
+
+    function openPasswordModal(levelName, url) {
+      targetUrl = url;
+      targetLevelName = levelName;
+
+      modalLevelName.textContent = levelName;
+      passwordInput.value = "";
+      passwordError.classList.remove("active");
+      passwordError.textContent = "Şifre hatalı. Lütfen tekrar deneyiniz.";
+      passwordModal.classList.add("active");
+
+      setTimeout(() => {
+        passwordInput.focus();
+      }, 100);
+    }
+
+    function closePasswordModal() {
+      passwordModal.classList.remove("active");
+      passwordInput.value = "";
+      passwordError.classList.remove("active");
+      targetUrl = "";
+      targetLevelName = "";
+    }
+
+    function findPasswordGroup(passwordGroups, enteredPassword) {
+      const normalizedEntered = trFold(enteredPassword.trim());
+
+      return passwordGroups.find(group => {
+        if (group.active !== true) return false;
+        if (!Array.isArray(group.codes)) return false;
+
+        return group.codes.some(code => trFold(String(code).trim()) === normalizedEntered);
+      });
+    }
+
+    async function checkPassword() {
+      const enteredPassword = passwordInput.value.trim();
+
+      if (!enteredPassword) {
+        passwordError.textContent = "Lütfen şifre giriniz.";
+        passwordError.classList.add("active");
+        passwordInput.focus();
+        return;
+      }
+
+      try {
+        const response = await fetch(AYDA_PASSWORD_URL + "?v=" + Date.now());
+        const passwordGroups = await response.json();
+
+        const group = findPasswordGroup(passwordGroups, enteredPassword);
+
+        if (!group) {
+          passwordError.textContent = "Şifre hatalı veya pasif durumda.";
+          passwordError.classList.add("active");
+          passwordInput.value = "";
+          passwordInput.focus();
+          return;
+        }
+
+        const now = new Date();
+        const expireDate = new Date(group.expires + "T23:59:59");
+
+        if (now > expireDate) {
+          passwordError.textContent = "Bu şifrenin genel kullanım süresi dolmuştur.";
+          passwordError.classList.add("active");
+          passwordInput.value = "";
+          passwordInput.focus();
+          return;
+        }
+
+        const storageKey = "ayda_first_login_" + trFold(enteredPassword);
+        const firstLogin = localStorage.getItem(storageKey);
+
+        if (!firstLogin) {
+          localStorage.setItem(storageKey, new Date().toISOString());
+        } else {
+          const firstDate = new Date(firstLogin);
+          const diffDays = (now - firstDate) / (1000 * 60 * 60 * 24);
+
+          if (diffDays > Number(group.durationDays)) {
+            passwordError.textContent = "Bu şifrenin ilk girişten sonraki kullanım süresi dolmuştur.";
+            passwordError.classList.add("active");
+            passwordInput.value = "";
+            passwordInput.focus();
+            return;
+          }
+        }
+
+        window.location.href = targetUrl;
+
+      } catch (error) {
+        passwordError.textContent = "Şifre sistemi yüklenemedi. Lütfen tekrar deneyiniz.";
+        passwordError.classList.add("active");
+      }
+    }
+
+    passwordInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+
+      if (event.key === "Escape") {
+        closePasswordModal();
+      }
+    });
+
+    passwordModal.addEventListener("click", function(event) {
+      if (event.target === passwordModal) {
+        closePasswordModal();
+      }
+    });
+  </script>
 </body>
 </html>
